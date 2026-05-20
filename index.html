@@ -151,11 +151,6 @@
   .trial-box-title { font-size: 14px; font-weight: 500; color: #0f172a; margin-bottom: 6px; }
   .trial-box-desc { font-size: 13px; color: #0C447C; line-height: 1.6; }
 
-  /* Sender guide */
-  .sender-guide { margin-top: 3rem; padding: 18px 20px; border: 1px dashed #cbd5e1; border-radius: 10px; background: #f8f9fb; }
-  .sender-guide-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; }
-  .sender-guide p { font-size: 13px; color: #64748b; line-height: 1.65; margin-bottom: 0.5rem; }
-  .sender-guide b { font-weight: 500; color: #475569; }
 
   /* Polar SVG container */
   .polar-wrap { display: flex; justify-content: center; margin: 1rem 0 0.5rem; }
@@ -210,6 +205,7 @@
         <span class="partner-item">NATO</span><span class="partner-sep">·</span>
         <span class="partner-item">Orange Marine</span><span class="partner-sep">·</span>
         <span class="partner-item">ESA</span><span class="partner-sep">·</span>
+        <span class="partner-item">Van Oord</span><span class="partner-sep">·</span>
         <!-- duplicate for seamless loop -->
         <span class="partner-item">CMA CGM</span><span class="partner-sep">·</span>
         <span class="partner-item">Boskalis</span><span class="partner-sep">·</span>
@@ -218,6 +214,7 @@
         <span class="partner-item">NATO</span><span class="partner-sep">·</span>
         <span class="partner-item">Orange Marine</span><span class="partner-sep">·</span>
         <span class="partner-item">ESA</span><span class="partner-sep">·</span>
+        <span class="partner-item">Van Oord</span><span class="partner-sep">·</span>
       </div>
     </div>
   </div>
@@ -276,7 +273,7 @@
 
   <!-- 6. Data gap section -->
   <div class="section-label">The data gap</div>
-  <h2 class="section-title">Wind and wave forecasting has been solved. Ocean currents haven't — until now.</h2>
+  <h2 class="section-title">Wind and wave forecasting is mature. Ocean current forecasting hasn't reached the same standard — until now.</h2>
   <p class="body-text">Wind forecasting has achieved near-operational accuracy at 1/4° resolution globally. Wave models follow directly from wind. But ocean surface currents are a fundamentally different problem: eddies are an order of magnitude smaller than atmospheric storms, and there are far fewer ocean measurements than atmospheric ones.</p>
 
   <div class="problem-box">
@@ -288,9 +285,9 @@
   <div class="profile-box">
     <p><b>HIRES-CURRENTS accuracy vs EU &amp; US operational models</b> — validated against 165,000+ independent in-situ measurements across North Atlantic and South Africa:</p>
     <div class="assist-list">
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>60% more excellent forecasts</b> (direction error &lt;15°): 35–37% vs 19–25% for EU/US models</div></div>
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>Wrong forecasts reduced by a factor of 2–3</b> (direction error &gt;90°): 8% vs 21–25% for EU/US models</div></div>
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>More than 70% of forecasts accurate to within 45°</b> — vs ~52% for standard models</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>37% of forecasts excellent</b> (direction error &lt;15°) vs 23% for EU and US operational models</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>8% of forecasts wrong</b> (direction error &gt;90°) vs 24% for EU and 21% for US models</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b>76% of forecasts good or excellent</b> (within 45°) vs 52% for EU operational models</div></div>
     </div>
   </div>
 
@@ -560,64 +557,103 @@
     <span class="profile-stat">Less than 5% MAPE on custom-trained vessel models</span>
   </div>
 
-  <!-- Polar diagram SVG -->
+  <!-- Polar diagram SVG — Beaufort-style, matching Ocean Bulletin performance polars -->
   <div class="polar-wrap">
-    <svg viewBox="0 0 300 200" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 440 440" width="100%" style="max-width:440px;" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <clipPath id="topHalf">
-          <rect x="0" y="0" width="300" height="150"/>
+        <clipPath id="polarBounds">
+          <rect x="0" y="0" width="440" height="440"/>
         </clipPath>
+        <radialGradient id="whiteCenter" cx="30" cy="275" r="68" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+          <stop offset="65%" stop-color="#ffffff" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="scaleFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#b91c1c"/>
+          <stop offset="78%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#16a34a"/>
+        </linearGradient>
       </defs>
 
       <!-- Background -->
-      <rect width="300" height="200" rx="10" fill="#f1f5f9"/>
+      <rect width="440" height="440" rx="12" fill="#ffffff"/>
 
-      <!-- Label -->
-      <text x="150" y="20" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#64748b" font-weight="500">Performance Polar — Speed Adjustment by Wind/Current Angle</text>
+      <!-- SPEED label -->
+      <text x="218" y="14" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#94a3b8" letter-spacing="2" font-weight="500">SPEED</text>
+      <!-- Speed tab container -->
+      <rect x="63" y="18" width="310" height="36" rx="18" fill="#f1f5f9"/>
+      <!-- Active: 15 kn -->
+      <rect x="155" y="16" width="118" height="40" rx="20" fill="#5b9bd5"/>
+      <text x="115" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">11 kn</text>
+      <text x="214" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#ffffff" font-weight="600">15 kn</text>
+      <text x="313" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">18 kn</text>
 
-      <!-- Polar grid rings -->
-      <circle cx="150" cy="150" r="90" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-      <circle cx="150" cy="150" r="65" fill="none" stroke="#e2e8f0" stroke-width="0.8"/>
-      <circle cx="150" cy="150" r="40" fill="none" stroke="#e2e8f0" stroke-width="0.7"/>
+      <!-- DRAFT label -->
+      <text x="218" y="64" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#94a3b8" letter-spacing="2" font-weight="500">DRAFT</text>
+      <!-- Draft tab container -->
+      <rect x="63" y="68" width="310" height="36" rx="18" fill="#f1f5f9"/>
+      <!-- Active: 4.5 m -->
+      <rect x="63" y="66" width="118" height="40" rx="20" fill="#5b9bd5"/>
+      <text x="122" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#ffffff" font-weight="600">4.5 m</text>
+      <text x="218" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">5 m</text>
+      <text x="315" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">5.5 m</text>
 
-      <!-- Reference lines -->
-      <line x1="150" y1="60" x2="150" y2="150" stroke="#e2e8f0" stroke-width="0.8"/>
-      <line x1="60" y1="150" x2="240" y2="150" stroke="#e2e8f0" stroke-width="0.8"/>
-      <line x1="86" y1="86" x2="214" y2="150" stroke="#e2e8f0" stroke-width="0.5"/>
-      <line x1="214" y1="86" x2="86" y2="150" stroke="#e2e8f0" stroke-width="0.5"/>
+      <!-- POLAR diagram: cx=30, cy=275, R_max=155 -->
+      <!-- Colour wedge sectors (angle from top=0°, clockwise) -->
+      <g clip-path="url(#polarBounds)">
+        <!-- 0°–25°: strong orange-red (heavy head-seas speed loss) -->
+        <path d="M 30,275 L 30,120 A 155,155 0 0,1 95.5,134.6 Z" fill="#c2410c"/>
+        <!-- 25°–50°: orange-red -->
+        <path d="M 30,275 L 95.5,134.6 A 155,155 0 0,1 148.7,175.3 Z" fill="#ea580c"/>
+        <!-- 50°–80°: orange -->
+        <path d="M 30,275 L 148.7,175.3 A 155,155 0 0,1 182.7,248 Z" fill="#f97316"/>
+        <!-- 80°–100°: pale amber (near beam, neutral zone) -->
+        <path d="M 30,275 L 182.7,248 A 155,155 0 0,1 182.7,302 Z" fill="#fde68a"/>
+        <!-- 100°–130°: very pale yellow (slight following) -->
+        <path d="M 30,275 L 182.7,302 A 155,155 0 0,1 148.7,374.7 Z" fill="#fef9c3"/>
+        <!-- 130°–160°: pale green (following seas, moderate gain) -->
+        <path d="M 30,275 L 148.7,374.7 A 155,155 0 0,1 83,420.7 Z" fill="#d1fae5"/>
+        <!-- 160°–180°: green (following seas, speed gain) -->
+        <path d="M 30,275 L 83,420.7 A 155,155 0 0,1 30,430 Z" fill="#6ee7b7"/>
 
-      <!-- Red sectors — head seas (0–60° = speed loss) -->
-      <path d="M 150 150 L 150 62 A 88 88 0 0 0 86.7 106 Z" fill="#fca5a5" opacity="0.55"/>
-      <path d="M 150 150 L 150 62 A 88 88 0 0 1 213.3 106 Z" fill="#fca5a5" opacity="0.55"/>
+        <!-- White radial fade at centre (low Beaufort = less impact) -->
+        <circle cx="30" cy="275" r="68" fill="url(#whiteCenter)"/>
 
-      <!-- Amber sectors — beam seas (60–120° — neutral) -->
-      <path d="M 150 150 L 86.7 106 A 88 88 0 0 0 60 150 Z" fill="#fde68a" opacity="0.45"/>
-      <path d="M 150 150 L 213.3 106 A 88 88 0 0 1 240 150 Z" fill="#fde68a" opacity="0.45"/>
+        <!-- Beaufort ring outlines -->
+        <path d="M 30,236 A 39,39 0 1,1 30,314" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <path d="M 30,198 A 77,77 0 1,1 30,352" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+        <path d="M 30,159 A 116,116 0 1,1 30,391" fill="none" stroke="#d1d5db" stroke-width="1"/>
+        <path d="M 30,120 A 155,155 0 1,1 30,430" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
 
-      <!-- Green sectors — following seas (120–180° = speed gain) -->
-      <path d="M 150 150 L 60 150 A 88 88 0 0 0 150 238 Z" fill="#86efac" opacity="0.55" clip-path="url(#topHalf)"/>
-      <path d="M 150 150 L 240 150 A 88 88 0 0 1 150 238 Z" fill="#86efac" opacity="0.55" clip-path="url(#topHalf)"/>
+        <!-- Angular reference lines from centre -->
+        <line x1="30" y1="275" x2="107.5" y2="140.8" stroke="#e2e8f0" stroke-width="0.8"/>
+        <line x1="30" y1="275" x2="164.2" y2="197.5" stroke="#e2e8f0" stroke-width="0.8"/>
+        <line x1="30" y1="275" x2="185" y2="275" stroke="#e2e8f0" stroke-width="0.8"/>
+        <line x1="30" y1="275" x2="164.2" y2="352.5" stroke="#e2e8f0" stroke-width="0.8"/>
+        <line x1="30" y1="275" x2="107.5" y2="409.2" stroke="#e2e8f0" stroke-width="0.8"/>
+      </g>
 
-      <!-- Polar curve -->
-      <path d="M 150 150 L 150 68 Q 175 72 195 90 Q 215 115 218 148 Q 215 165 205 172 L 150 150 Q 95 172 82 148 Q 85 115 105 90 Q 125 72 150 68 Z"
-            fill="none" stroke="#185FA5" stroke-width="2" opacity="0.8"/>
+      <!-- Beaufort ring labels on θ=90° horizontal axis -->
+      <text x="55" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">2</text>
+      <text x="96" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">4</text>
+      <text x="136" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">6</text>
+      <text x="175" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">8</text>
+      <text x="148" y="432" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">Beaufort</text>
 
-      <!-- Angle labels -->
-      <text x="150" y="58" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" fill="#ef4444">0° (head seas)</text>
-      <text x="150" y="188" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" fill="#16a34a">180° (following)</text>
-      <text x="52" y="152" text-anchor="end" font-family="DM Sans, sans-serif" font-size="8" fill="#d97706">90°</text>
-      <text x="248" y="152" font-family="DM Sans, sans-serif" font-size="8" fill="#d97706">90°</text>
+      <!-- Axis labels -->
+      <text x="5" y="127" font-family="DM Sans, sans-serif" font-size="14" fill="#1e3a5f" font-weight="700">0°</text>
+      <text x="190" y="270" font-family="DM Sans, sans-serif" font-size="14" fill="#1e3a5f" font-weight="700">90°</text>
+      <text x="108" y="118" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">Angle [deg]</text>
 
-      <!-- Legend -->
-      <rect x="8" y="168" width="10" height="8" rx="2" fill="#fca5a5" opacity="0.8"/>
-      <text x="21" y="176" font-family="DM Sans, sans-serif" font-size="7.5" fill="#64748b">Speed loss</text>
-      <rect x="76" y="168" width="10" height="8" rx="2" fill="#fde68a" opacity="0.8"/>
-      <text x="89" y="176" font-family="DM Sans, sans-serif" font-size="7.5" fill="#64748b">Neutral</text>
-      <rect x="136" y="168" width="10" height="8" rx="2" fill="#86efac" opacity="0.8"/>
-      <text x="149" y="176" font-family="DM Sans, sans-serif" font-size="7.5" fill="#64748b">Speed gain</text>
+      <!-- Colour scale bar -->
+      <text x="393" y="130" font-family="DM Sans, sans-serif" font-size="11" fill="#b91c1c" font-weight="600">+7</text>
+      <rect x="380" y="134" width="14" height="255" rx="7" fill="url(#scaleFade)"/>
+      <text x="393" y="322" font-family="DM Sans, sans-serif" font-size="11" fill="#64748b">0</text>
+      <text x="393" y="394" font-family="DM Sans, sans-serif" font-size="11" fill="#16a34a" font-weight="600">-2</text>
     </svg>
   </div>
-  <p class="platform-caption" style="text-align:center;">Vessel performance polar — speed adjustment at each heading relative to wind/wave/current direction. Trained from your vessel's own voyage data.</p>
+  <p class="platform-caption" style="text-align:center;">Vessel performance polar — speed change (%) at each wind/current angle and sea state (Beaufort). Trained from your vessel's own voyage data. Less than 5% MAPE on custom-trained models.</p>
 
   <div class="divider"></div>
 
@@ -642,7 +678,7 @@
         <span class="case-stat">+0.6 kn mean SOG improvement</span>
         <span class="case-stat">Over 1 hour saved</span>
         <span class="case-stat">Up to 4% fuel saving</span>
-        <span class="case-stat">€2,300–€3,800 per equivalent voyage</span>
+        <span class="case-stat">€2,300–€3,800 saved per equivalent voyage</span>
       </div>
       <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
     </div>
@@ -658,13 +694,11 @@
       </div>
       <div class="case-desc">Vessel routed through the Gulf Stream for 3 days using 6 additional Amphitrite waypoints. Set speed 14.3 kn; peak SOG 18.8 kn — the difference accounted for by the current, not additional fuel. SOG-STW measurement matches HIRES-CURRENTS prediction.</div>
       <div class="case-stats">
-        <span class="case-stat">+2.7 kn for 3 days, no extra fuel</span>
-        <span class="case-stat">8–9% fuel saving</span>
-        <span class="case-stat">85–95 tonnes CO₂ saved</span>
-        <span class="case-stat">Half a day faster</span>
+        <span class="case-stat">+2.7 kn for 3 days — no extra fuel</span>
+        <span class="case-stat">Half a day faster at the same fuel burn</span>
         <span class="case-stat">~€28,800 total saving</span>
       </div>
-      <div class="case-desc" style="margin-top:8px;">Combined with standard weather routing (wind + wave avoidance): <b>up to 10–15% total fuel savings</b> for a trans-Atlantic voyage.</div>
+      <div class="case-desc" style="margin-top:8px;">The speed gain came entirely from surfing the Gulf Stream — not increased engine power. Combined with standard weather routing (wind + wave): <b>up to 10–15% total fuel savings</b> for a trans-Atlantic voyage.</div>
       <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
     </div>
 
@@ -679,7 +713,7 @@
       </div>
       <div class="case-desc">Statistical analysis of a full year of Suez–Gibraltar container feeder operations. Adverse currents (undetected by standard routing tools) generated systematic fuel over-consumption on repeated voyages.</div>
       <div class="case-stats">
-        <span class="case-stat">€2,300–€3,800 per voyage, extra fuel</span>
+        <span class="case-stat">€2,300–€3,800 per voyage in extra fuel costs</span>
         <span class="case-stat">12–20 T additional CO₂ per voyage</span>
         <span class="case-stat">Vessel: 18 kn · ~35 T/day fuel</span>
       </div>
@@ -719,7 +753,7 @@
 
     <div class="ets-row">
       <input type="checkbox" id="etsToggle" onchange="calcUpdate()">
-      <label for="etsToggle">Include EU ETS carbon cost (approx. 210 EUR/t CO₂)</label>
+      <label for="etsToggle">Include EU ETS carbon cost (approx. 70 EUR/t CO₂, per white paper)</label>
     </div>
 
     <div class="calc-result">
@@ -737,7 +771,7 @@
         <span class="calc-result-value" id="r3">—</span>
       </div>
     </div>
-    <div class="calc-note">Savings validated from AIS data on real voyages. Actual savings depend on route, vessel type, and prevailing conditions. EU ETS cost estimate based on ~3.2 t CO₂/t HFO; EU ETS price approx. €210/t CO₂.</div>
+    <div class="calc-note">Savings validated from AIS data on real voyages. Actual savings depend on route, vessel type, and prevailing conditions. EU ETS cost estimate based on ~3.2 t CO₂/t HFO; EU ETS price approx. €70/t CO₂ (per Amphitrite white paper, April 2026).</div>
   </div>
 
   <div class="divider"></div>
@@ -836,7 +870,7 @@
   </div>
 
   <div class="body-text" style="margin-top:0.5rem;">
-    <strong>Noah</strong> — <a href="tel:+33000000000" style="color:#185FA5; text-decoration:none;">+33 — on request</a> · <a href="mailto:briac.levu@amphitrite.fr" style="color:#185FA5; text-decoration:none;">briac.levu@amphitrite.fr</a> · <a href="mailto:evangelos.moschos@amphitrite.fr" style="color:#185FA5; text-decoration:none;">evangelos.moschos@amphitrite.fr</a>
+    <strong>Noah</strong> — <a href="tel:+31612184055" style="color:#185FA5; text-decoration:none;">+31 612 18 4055</a> · <a href="mailto:noah@amphitrite.fr" style="color:#185FA5; text-decoration:none;">noah@amphitrite.fr</a>
   </div>
 
   <div class="trial-box">
@@ -844,18 +878,6 @@
     <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. <a href="https://bulletin.amphitrite.fr/" style="color:#185FA5; font-weight:500;" target="_blank">bulletin.amphitrite.fr →</a></div>
   </div>
 
-  <div class="divider"></div>
-
-  <!-- 17. Sender guide -->
-  <div class="sender-guide">
-    <div class="sender-guide-label">Admin — sender guide (not visible to recipient)</div>
-    <p><b>When to send:</b> After an initial call where the contact expressed interest but hasn't committed to a next step. Not for cold outreach.</p>
-    <p><b>Subject line options:</b> "Amphitrite — what we discussed" · "Ocean current data for [vessel/route]" · "Follow-up: Amphitrite maritime data"</p>
-    <p><b>Suggested intro:</b> "Following up from our call — I've put together a summary of what Amphitrite does and how it's been validated in practice. The case studies at the bottom are from our white paper (April 2026) — all validated against AIS data."</p>
-    <p><b>If they ask about price:</b> Pricing is route- and volume-based. Starting point is typically a vessel profile study. Don't mention a number until scoped.</p>
-    <p><b>Key contacts:</b> briac.levu@amphitrite.fr · evangelos.moschos@amphitrite.fr</p>
-    <p><b>White paper:</b> bit.ly/4930s9X · <b>Platform:</b> bulletin.amphitrite.fr · <b>API docs:</b> api.amphitrite.fr/docs</p>
-  </div>
 
 </div>
 
@@ -889,7 +911,7 @@
     const baseCost = annualTonnes * fuelPrice;
 
     // ETS cost: ~3.2 tCO2 per t HFO, €210/tCO2
-    const etsCostPerTonne = ets ? 3.2 * 210 : 0;
+    const etsCostPerTonne = ets ? 3.2 * 70 : 0;
     const totalPerTonne = fuelPrice + etsCostPerTonne;
     const totalBase = annualTonnes * totalPerTonne;
 
