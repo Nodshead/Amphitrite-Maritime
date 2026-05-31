@@ -4,16 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Amphitrite – Shipping & Offshore Operations</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #f8f9fb; font-family: 'DM Sans', sans-serif; color: #1a1a2e; }
   .page { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
 
   /* Logo bar */
-  .logo-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 2.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid #e2e8f0; }
-  .logo-name { font-size: 15px; font-weight: 500; color: #0f172a; }
+  .logo-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 1.6rem; padding-bottom: 1.2rem; border-bottom: 1px solid #e2e8f0; text-decoration: none; }
+  .logo-bar img { height: 36px; transition: transform 0.2s; }
+  .logo-bar:hover img { transform: scale(1.06); }
+  .logo-name { font-size: 16px; font-weight: 600; color: #0f172a; }
   .logo-sub { font-size: 12px; color: #64748b; margin-top: 1px; }
+  .logo-link-tag { margin-left: auto; font-size: 11px; font-weight: 500; color: #185FA5; background: #E6F1FB; padding: 5px 11px; border-radius: 20px; white-space: nowrap; }
+
+  /* Context / explainer strip */
+  .context { background: linear-gradient(135deg, #0A1E3D 0%, #103a6b 100%); border-radius: 14px; padding: 24px 22px; margin-bottom: 1.6rem; position: relative; overflow: hidden; }
+  .context::after { content: ''; position: absolute; right: -40px; top: -40px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(74,144,217,0.25), transparent 70%); }
+  .context-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; position: relative; z-index: 1; }
+  .context-head img { height: 26px; }
+  .context-head span { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #7dd3fc; }
+  .context-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 400; color: #fff; line-height: 1.35; margin-bottom: 10px; position: relative; z-index: 1; }
+  .context-text { font-size: 13.5px; line-height: 1.65; color: #c3d6ee; position: relative; z-index: 1; }
+  .context-text b { color: #fff; font-weight: 500; }
+  .context-flow { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; position: relative; z-index: 1; }
+  .context-flow span { font-size: 11.5px; font-weight: 500; color: #cfe3fb; background: rgba(74,144,217,0.18); border: 1px solid rgba(125,211,252,0.25); padding: 5px 11px; border-radius: 20px; }
 
   /* Hero */
   .hero-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #185FA5; background: #E6F1FB; padding: 4px 10px; border-radius: 20px; margin-bottom: 1rem; }
@@ -23,8 +38,9 @@
   /* Divider */
   .divider { height: 1px; background: #e2e8f0; margin: 2rem 0; }
 
-  /* Section labels */
-  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.8rem; }
+  /* Section labels — with spiral mark */
+  .section-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.8rem; }
+  .section-label svg { flex-shrink: 0; }
   .section-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 400; color: #0f172a; margin-bottom: 0.5rem; line-height: 1.35; }
   .body-text { font-size: 14px; line-height: 1.7; color: #334155; margin-bottom: 0.75rem; }
 
@@ -78,6 +94,23 @@
   .platform-section { margin: 0.5rem 0 1.5rem; }
   .platform-caption { font-size: 12px; color: #64748b; line-height: 1.55; margin-top: 10px; font-style: italic; }
 
+  /* ===== Vessel model — interactive map + polar ===== */
+  .vm-card { border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 8px 30px rgba(13,33,69,0.08); margin-bottom: 1rem; }
+  .vm-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .vm-map { position: relative; min-height: 460px; background: #0a2a4a; }
+  .vm-map svg { display: block; width: 100%; height: 100%; }
+  .vm-map-badge { position: absolute; top: 12px; left: 12px; display: flex; align-items: center; gap: 7px; background: rgba(10,30,61,0.78); backdrop-filter: blur(4px); padding: 6px 11px; border-radius: 20px; z-index: 2; }
+  .vm-map-badge img { height: 18px; }
+  .vm-map-badge span { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: #cfe3fb; text-transform: uppercase; }
+  .vm-panel { padding: 20px 20px 22px; display: flex; flex-direction: column; }
+  .vm-ctrl-label { text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: #94a3b8; text-transform: uppercase; margin-bottom: 7px; }
+  .vm-tabs { display: flex; background: #f1f5f9; border-radius: 22px; padding: 3px; margin-bottom: 14px; }
+  .vm-tab { flex: 1; padding: 9px 0; text-align: center; font-size: 13px; font-weight: 500; color: #64748b; border-radius: 19px; cursor: pointer; transition: all 0.18s; user-select: none; }
+  .vm-tab.active { background: #5b9bd5; color: #fff; font-weight: 600; box-shadow: 0 2px 8px rgba(91,155,213,0.4); }
+  .vm-polar-wrap { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; margin-top: 6px; min-height: 300px; }
+  .vm-polar-canvas { position: absolute; }
+  .vm-polar-svg { position: relative; width: 100%; }
+
   /* Case study cards */
   .case-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 1rem; }
   .case-card { padding: 18px 20px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
@@ -89,28 +122,6 @@
   .case-stat { font-size: 12px; font-weight: 500; background: #f1f5f9; color: #185FA5; padding: 4px 10px; border-radius: 6px; }
   .case-desc { font-size: 13px; color: #64748b; line-height: 1.6; margin-top: 8px; }
   .case-source { font-size: 11px; color: #94a3b8; margin-top: 8px; }
-
-  /* Calculator */
-  .calc-header { background: #0D2145; border-radius: 10px 10px 0 0; padding: 12px 18px; }
-  .calc-header-label { font-size: 12px; font-weight: 500; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; }
-  .calc-box { padding: 20px; border: 1px solid #B5D4F4; border-radius: 0 0 10px 10px; background: #E6F1FB; margin-bottom: 1rem; border-top: none; }
-  .calc-box label { font-size: 13px; font-weight: 500; color: #0C447C; display: block; margin-bottom: 6px; }
-  .fuel-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-  .fuel-tab { flex: 1; padding: 7px; border: 1px solid #B5D4F4; border-radius: 8px; background: #fff; font-size: 12px; font-weight: 500; color: #0C447C; text-align: center; cursor: pointer; }
-  .fuel-tab.active { background: #185FA5; color: #fff; border-color: #185FA5; }
-  .calc-row { display: flex; gap: 10px; margin-bottom: 14px; }
-  .calc-field { flex: 1; }
-  .calc-field label { font-size: 12px; color: #0C447C; font-weight: 500; display: block; margin-bottom: 4px; }
-  .calc-input { width: 100%; padding: 7px 10px; border: 1px solid #B5D4F4; border-radius: 8px; background: #fff; font-size: 13px; color: #0f172a; font-family: 'DM Sans', sans-serif; }
-  .ets-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-  .ets-row label { font-size: 12px; color: #0C447C; font-weight: 500; cursor: pointer; }
-  .calc-result { background: #fff; border: 1px solid #B5D4F4; border-radius: 8px; padding: 14px 16px; }
-  .calc-result-base { font-size: 12px; color: #64748b; margin-bottom: 10px; }
-  .calc-result-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #e2e8f0; }
-  .calc-result-row:last-child { border-bottom: none; }
-  .calc-result-label { font-size: 13px; color: #475569; }
-  .calc-result-value { font-size: 14px; font-weight: 500; color: #185FA5; }
-  .calc-note { font-size: 11px; color: #94a3b8; margin-top: 10px; line-height: 1.5; }
 
   /* FAQ */
   .faq-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
@@ -139,6 +150,7 @@
 
   /* Ocean Bulletin CTA block */
   .ob-cta { background: #0A1E3D; border-radius: 12px; padding: 28px 24px; margin: 1.5rem 0; text-align: center; }
+  .ob-cta img { height: 30px; margin-bottom: 10px; }
   .ob-cta-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #7098C8; margin-bottom: 0.8rem; }
   .ob-cta-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: #fff; margin-bottom: 0.75rem; line-height: 1.3; }
   .ob-cta-text { font-size: 14px; color: #94B8D8; line-height: 1.6; margin-bottom: 1.5rem; }
@@ -151,6 +163,13 @@
   .trial-box-title { font-size: 14px; font-weight: 500; color: #0f172a; margin-bottom: 6px; }
   .trial-box-desc { font-size: 13px; color: #0C447C; line-height: 1.6; }
 
+  /* Footer */
+  .site-footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .site-footer img { height: 26px; }
+  .site-footer .ft-name { font-size: 13px; font-weight: 600; color: #0f172a; }
+  .site-footer .ft-links { margin-left: auto; display: flex; gap: 16px; }
+  .site-footer a { font-size: 13px; color: #185FA5; text-decoration: none; font-weight: 500; }
+  .site-footer a:hover { text-decoration: underline; }
 
   /* Polar SVG container */
   .polar-wrap { display: flex; justify-content: center; margin: 1rem 0 0.5rem; }
@@ -163,27 +182,44 @@
   .stream2 { animation: flow2 5s linear infinite; }
   .stream3 { animation: flow3 6s linear infinite; }
 
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
     .hero-title { font-size: 1.6rem; }
-    .calc-row { flex-direction: column; }
     .cal-row { flex-direction: column; }
     .ob-cta-title { font-size: 1.25rem; }
+    .vm-grid { grid-template-columns: 1fr; }
+    .vm-map { min-height: 300px; }
   }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- 1. Logo bar -->
-  <div class="logo-bar">
-    <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite" style="height:32px;">
+  <!-- 1. Logo bar (links to website) -->
+  <a class="logo-bar" href="https://www.amphitrite.fr/" target="_blank">
+    <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
     <div>
       <div class="logo-name">Amphitrite</div>
       <div class="logo-sub">Ocean Data Intelligence</div>
     </div>
+    <span class="logo-link-tag">amphitrite.fr →</span>
+  </a>
+
+  <!-- 2. Context strip — what Amphitrite is (read this first) -->
+  <div class="context">
+    <div class="context-head">
+      <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
+      <span>Start here</span>
+    </div>
+    <div class="context-title">Amphitrite is an ocean data intelligence company.</div>
+    <p class="context-text">We've built a tool for <b>route optimisation</b> — helping ships cut fuel and decarbonise. It works simply: <b>plot your points on the map, or load your route, and Amphitrite optimises it</b> by combining wind, waves, and ocean currents into one passage plan. We run our <b>own ocean current models at 3 km resolution</b>, validated against in-situ measurements for accuracy. For shipping and defence applications, we build a <b>custom model of your specific vessel</b> for the most accurate routing possible.</p>
+    <div class="context-flow">
+      <span>1 · Plot your route</span>
+      <span>2 · We optimise it</span>
+      <span>3 · Save fuel &amp; emissions</span>
+    </div>
   </div>
 
-  <!-- 2. Hero -->
+  <!-- 3. Hero -->
   <div class="hero-tag">Shipping &amp; Offshore Operations</div>
   <h1 class="hero-title">High-resolution ocean intelligence for maritime operations.</h1>
   <p class="hero-sub">Wind, waves, and ocean currents at 3.0 km resolution — hourly updates, 14-day forecast horizon. One integrated operational picture for routing, offshore workability, and passage planning.</p>
@@ -193,7 +229,7 @@
 
   <div class="divider"></div>
 
-  <!-- 3. Trusted by -->
+  <!-- 4. Trusted by -->
   <div class="partners-section">
     <div class="partners-label">Trusted by</div>
     <div class="partners-wrap">
@@ -221,8 +257,246 @@
 
   <div class="divider"></div>
 
-  <!-- 4. What Amphitrite is -->
-  <div class="section-label">What it is</div>
+  <!-- 5. Custom vessel model — interactive (moved near top) -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Custom vessel model
+  </div>
+  <h2 class="section-title">Your vessel, your route — modelled at 3.0 km.</h2>
+  <p class="body-text">A custom vessel model learns how <i>your</i> ship responds to every combination of wind angle, wave direction, and current — from your own voyage history. Try the speed and draft settings below: the performance polar updates live to show speed change at every angle and sea state.</p>
+
+  <div class="vm-card">
+    <div class="vm-grid">
+      <!-- Ocean current map with Start / End -->
+      <div class="vm-map">
+        <div class="vm-map-badge">
+          <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="">
+          <span>HIRES-Currents · 3 km</span>
+        </div>
+        <svg viewBox="0 0 360 460" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Turbulence-based ocean current texture (light streaks on deep blue) -->
+            <filter id="oceanflow" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="turbulence" baseFrequency="0.009 0.022" numOctaves="5" seed="11" stitchTiles="stitch" result="t"/>
+              <feColorMatrix in="t" type="luminanceToAlpha" result="a"/>
+              <feComponentTransfer in="a" result="b">
+                <feFuncA type="discrete" tableValues="0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0"/>
+              </feComponentTransfer>
+              <feFlood flood-color="#bfe6ff" result="f"/>
+              <feComposite in="f" in2="b" operator="in"/>
+            </filter>
+            <filter id="oceanflow2" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="turbulence" baseFrequency="0.013 0.03" numOctaves="4" seed="29" stitchTiles="stitch" result="t"/>
+              <feColorMatrix in="t" type="luminanceToAlpha" result="a"/>
+              <feComponentTransfer in="a" result="b">
+                <feFuncA type="discrete" tableValues="0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0"/>
+              </feComponentTransfer>
+              <feFlood flood-color="#e8f6ff" result="f"/>
+              <feComposite in="f" in2="b" operator="in"/>
+            </filter>
+            <linearGradient id="seaGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0d3a63"/>
+              <stop offset="100%" stop-color="#0a2747"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Sea -->
+          <rect width="360" height="460" fill="url(#seaGrad)"/>
+          <!-- Current streaks -->
+          <rect width="360" height="460" fill="#bfe6ff" filter="url(#oceanflow)" opacity="0.55"/>
+          <rect width="360" height="460" fill="#e8f6ff" filter="url(#oceanflow2)" opacity="0.4"/>
+
+          <!-- Lat/long grid -->
+          <g stroke="#9fc4e6" stroke-width="0.5" opacity="0.18">
+            <line x1="90" y1="0" x2="90" y2="460"/>
+            <line x1="180" y1="0" x2="180" y2="460"/>
+            <line x1="270" y1="0" x2="270" y2="460"/>
+            <line x1="0" y1="115" x2="360" y2="115"/>
+            <line x1="0" y1="230" x2="360" y2="230"/>
+            <line x1="0" y1="345" x2="360" y2="345"/>
+          </g>
+
+          <!-- Simplified landmasses (Americas to the west / south) -->
+          <g fill="#eef2f4" opacity="0.92" stroke="#d7dee3" stroke-width="0.6">
+            <path d="M 0 70 L 40 60 Q 70 75 60 110 Q 55 140 30 150 L 0 160 Z"/>
+            <path d="M 0 300 Q 35 290 55 320 Q 70 360 45 410 Q 30 445 10 460 L 0 460 Z"/>
+            <path d="M 300 150 Q 335 140 360 150 L 360 210 Q 330 205 305 190 Z"/>
+          </g>
+
+          <!-- Route Start -> End -->
+          <line x1="150" y1="285" x2="245" y2="135" stroke="#dff1ff" stroke-width="2.4" opacity="0.95"/>
+          <g>
+            <circle cx="150" cy="285" r="15" fill="#3d92d6" stroke="#fff" stroke-width="2"/>
+            <text x="150" y="289" font-family="DM Sans, sans-serif" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">Start</text>
+          </g>
+          <g>
+            <circle cx="245" cy="135" r="13" fill="#5fb0e6" stroke="#fff" stroke-width="2"/>
+            <text x="245" y="139" font-family="DM Sans, sans-serif" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">End</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Control panel + interactive polar -->
+      <div class="vm-panel">
+        <div class="vm-ctrl-label">Service speed</div>
+        <div class="vm-tabs" id="vm-speed">
+          <div class="vm-tab" data-val="8">8 kn</div>
+          <div class="vm-tab active" data-val="10.5">10.5 kn</div>
+          <div class="vm-tab" data-val="14">14 kn</div>
+        </div>
+        <div class="vm-ctrl-label">Draft</div>
+        <div class="vm-tabs" id="vm-draft">
+          <div class="vm-tab active" data-val="4">4 m</div>
+          <div class="vm-tab" data-val="5">5 m</div>
+          <div class="vm-tab" data-val="6">6 m</div>
+        </div>
+
+        <div class="vm-polar-wrap">
+          <canvas class="vm-polar-canvas" id="polarCanvas" width="440" height="440"></canvas>
+          <!-- Axis / labels / scale overlay -->
+          <svg class="vm-polar-svg" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+            <!-- Title -->
+            <text x="150" y="22" font-family="DM Sans, sans-serif" font-size="14" fill="#334155" text-anchor="middle">Direction [deg]</text>
+            <!-- Angle labels -->
+            <text x="20" y="32" font-family="DM Sans, sans-serif" font-size="16" fill="#1e3a5f" font-weight="700">0°</text>
+            <text x="270" y="222" font-family="DM Sans, sans-serif" font-size="16" fill="#1e3a5f" font-weight="700">90°</text>
+            <text x="6" y="424" font-family="DM Sans, sans-serif" font-size="16" fill="#1e3a5f" font-weight="700">180°</text>
+
+            <!-- Beaufort ring outlines (cx=40 cy=215 Rmax=170, half disk opening right) -->
+            <g fill="none" stroke="#64748b" stroke-width="0.7" opacity="0.4">
+              <path d="M 40,181 A 34,34 0 0,1 40,249"/>
+              <path d="M 40,147 A 68,68 0 0,1 40,283"/>
+              <path d="M 40,113 A 102,102 0 0,1 40,317"/>
+              <path d="M 40,79 A 136,136 0 0,1 40,351"/>
+              <path d="M 40,45 A 170,170 0 0,1 40,385"/>
+            </g>
+            <!-- Angle reference lines -->
+            <g stroke="#64748b" stroke-width="0.6" opacity="0.3">
+              <line x1="40" y1="215" x2="40" y2="45"/>
+              <line x1="40" y1="215" x2="160.2" y2="94.8"/>
+              <line x1="40" y1="215" x2="210" y2="215"/>
+              <line x1="40" y1="215" x2="160.2" y2="335.2"/>
+              <line x1="40" y1="215" x2="40" y2="385"/>
+            </g>
+
+            <!-- Beaufort labels along 90° axis -->
+            <text x="64" y="219" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">2</text>
+            <text x="98" y="219" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">4</text>
+            <text x="132" y="219" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">6</text>
+            <text x="166" y="219" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">8</text>
+            <text x="196" y="240" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">10</text>
+            <text x="150" y="262" font-family="DM Sans, sans-serif" font-size="13" fill="#1e3a5f" font-weight="600">Beaufort</text>
+
+            <!-- Colour scale bar (+7 red .. 0 .. -2 green) -->
+            <defs>
+              <linearGradient id="vmScale" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#b91c1c"/>
+                <stop offset="22%" stop-color="#ea580c"/>
+                <stop offset="45%" stop-color="#f59e0b"/>
+                <stop offset="78%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#16a34a"/>
+              </linearGradient>
+            </defs>
+            <text x="415" y="110" font-family="DM Sans, sans-serif" font-size="13" fill="#b91c1c" text-anchor="middle" font-weight="600">+7</text>
+            <rect x="402" y="118" width="16" height="250" rx="8" fill="url(#vmScale)" stroke="#e2e8f0" stroke-width="0.5"/>
+            <text x="424" y="300" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">0</text>
+            <text x="415" y="388" font-family="DM Sans, sans-serif" font-size="13" fill="#16a34a" text-anchor="middle" font-weight="600">-2</text>
+            <text x="410" y="412" font-family="DM Sans, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Speed Loss [kn]</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="platform-caption">Performance polar — speed change (kn) at each relative wind/current angle and sea state (Beaufort), for the selected service speed and draft. Trained from your vessel's own voyage data. Less than 5% MAPE on custom-trained models.</p>
+
+  <div class="profile-box" style="margin-top:16px;">
+    <p><b>Generic vessel type assumptions introduce systematic routing error.</b> A custom vessel model removes that error using your actual data:</p>
+    <div class="assist-list" style="margin-top:14px;">
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Position logs, speed through water, speed over ground, heading, COG — from your AIS and onboard sensors</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Roll and pitch data, hull dimensions, engine power curves — from vessel records</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Output: the performance polar above — speed gain or loss at every wind angle, wave direction, and current strength</div></div>
+    </div>
+    <span class="profile-stat">Less than 5% MAPE on custom-trained vessel models</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 6. Validated case studies (moved up) -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Real-world results
+  </div>
+  <h2 class="section-title">AIS-validated case studies from the white paper.</h2>
+  <p class="body-text" style="margin-bottom:1rem;">All figures are validated against independent AIS data. Speed over ground, speed through water, and fuel consumption cross-referenced against HIRES-CURRENTS predictions.</p>
+
+  <div class="case-grid">
+
+    <!-- Case 1: North Atlantic pipelay (lead with strongest) -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-badge">Validated — AIS data</div>
+        <div>
+          <div class="case-title">North Atlantic Gulf Stream transit — pipelay vessel</div>
+          <div class="case-route">Pensacola (US) → Stavanger (Norway) · May–June 2025 · 160m vessel</div>
+        </div>
+      </div>
+      <div class="case-desc">Vessel routed through the Gulf Stream for 3 days using 6 additional Amphitrite waypoints. Set speed 14.3 kn; peak SOG 18.8 kn — the difference accounted for by the current, not additional fuel. SOG-STW measurement matches HIRES-CURRENTS prediction.</div>
+      <div class="case-stats">
+        <span class="case-stat">+2.7 kn for 3 days — no extra fuel</span>
+        <span class="case-stat">Half a day faster at the same fuel burn</span>
+        <span class="case-stat">~€28,800 total saving</span>
+      </div>
+      <div class="case-desc" style="margin-top:8px;">The speed gain came entirely from surfing the Gulf Stream — not increased engine power. Combined with standard weather routing (wind + wave): <b>up to 10–15% total fuel savings</b> for a trans-Atlantic voyage.</div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
+    </div>
+
+    <!-- Case 2: Med Ro-Ro -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-badge">Validated — AIS data</div>
+        <div>
+          <div class="case-title">Mediterranean short-sea routing — Ro-Ro vessel</div>
+          <div class="case-route">Tangier (Morocco) → Tunis · November 2023</div>
+        </div>
+      </div>
+      <div class="case-desc">Standard route would have faced several counter-current coastal eddies along the Algerian coast. Amphitrite's optimised route — a slight northward detour provided 24 hours in advance — avoided the eddies entirely.</div>
+      <div class="case-stats">
+        <span class="case-stat">+0.6 kn mean SOG improvement</span>
+        <span class="case-stat">Over 1 hour saved</span>
+        <span class="case-stat">Up to 4% fuel saving</span>
+        <span class="case-stat">€2,300–€3,800 saved per equivalent voyage</span>
+      </div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
+    </div>
+
+    <!-- Case 3: Container feeder route analysis -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-badge">1-year analysis</div>
+        <div>
+          <div class="case-title">Med container route — cost of undetected adverse currents</div>
+          <div class="case-route">Port-Said → Tangier-Med · 2,750 TEU feeder · 2022 statistical analysis</div>
+        </div>
+      </div>
+      <div class="case-desc">Statistical analysis of a full year of Suez–Gibraltar container feeder operations. Adverse currents (undetected by standard routing tools) generated systematic fuel over-consumption on repeated voyages.</div>
+      <div class="case-stats">
+        <span class="case-stat">€2,300–€3,800 per voyage in extra fuel costs</span>
+        <span class="case-stat">12–20 T additional CO₂ per voyage</span>
+        <span class="case-stat">Vessel: 18 kn · ~35 T/day fuel</span>
+      </div>
+      <div class="case-desc" style="margin-top:8px;">Multiplied across a year of Med trading: material, measurable fleet cost exposure that standard weather routing tools do not surface.</div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026.</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 7. What Amphitrite is -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    What it is
+  </div>
   <h2 class="section-title">The Ocean Bulletin — maritime intelligence platform.</h2>
   <p class="body-text">Amphitrite is a maritime weather intelligence platform combining high-resolution ocean currents, waves, and wind into one operational picture. Available as a browser-based platform (Ocean Bulletin) or as a data API for integration into your systems.</p>
 
@@ -247,8 +521,11 @@
 
   <div class="divider"></div>
 
-  <!-- 5. Who it's for -->
-  <div class="section-label">Who uses it</div>
+  <!-- 8. Who it's for -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Who uses it
+  </div>
   <h2 class="section-title">Across commercial shipping and offshore.</h2>
   <div class="chips-wrap">
     <span class="chip">Container operators</span>
@@ -271,8 +548,11 @@
 
   <div class="divider"></div>
 
-  <!-- 6. Data gap section -->
-  <div class="section-label">The data gap</div>
+  <!-- 9. Data gap section -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    The data gap
+  </div>
   <h2 class="section-title">Wind and wave forecasting is mature. Ocean current forecasting hasn't reached the same standard — until now.</h2>
   <p class="body-text">Wind forecasting has achieved near-operational accuracy at 1/4° resolution globally. Wave models follow directly from wind. But ocean surface currents are a fundamentally different problem: eddies are an order of magnitude smaller than atmospheric storms, and there are far fewer ocean measurements than atmospheric ones.</p>
 
@@ -293,8 +573,11 @@
 
   <div class="divider"></div>
 
-  <!-- 7. Platform SVG mockup -->
-  <div class="section-label">Ocean Bulletin platform</div>
+  <!-- 10. Platform SVG mockup -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Ocean Bulletin platform
+  </div>
   <h2 class="section-title">Two routes. One informed by 3.0 km ocean current data.</h2>
 
   <div class="platform-section">
@@ -315,26 +598,21 @@
           <stop offset="60%" stop-color="#0e7490" stop-opacity="0.5"/>
           <stop offset="100%" stop-color="#1e3a5f" stop-opacity="0"/>
         </linearGradient>
-        <!-- Clip for ocean area (right of sidebar) -->
         <clipPath id="oceanClip">
           <rect x="140" y="40" width="540" height="350"/>
         </clipPath>
       </defs>
 
-      <!-- Background -->
       <rect width="680" height="420" fill="url(#oceanGrad)"/>
 
-      <!-- Current intensity bands (colour-coded ocean) -->
       <ellipse cx="380" cy="200" rx="180" ry="55" fill="url(#currentBand1)" opacity="0.7" clip-path="url(#oceanClip)"/>
       <ellipse cx="460" cy="175" rx="120" ry="35" fill="#0e7490" opacity="0.12" clip-path="url(#oceanClip)"/>
       <ellipse cx="320" cy="230" rx="90" ry="28" fill="#164e63" opacity="0.2" clip-path="url(#oceanClip)"/>
       <ellipse cx="530" cy="250" rx="70" ry="22" fill="#1e3a5f" opacity="0.15" clip-path="url(#oceanClip)"/>
 
-      <!-- Gulf Stream zone band -->
       <path d="M 170 140 Q 300 120 420 145 Q 500 155 560 170 Q 600 180 620 195 L 620 240 Q 580 225 520 215 Q 440 200 360 195 Q 280 190 210 210 Z"
             fill="url(#gulfStreamGrad)" clip-path="url(#oceanClip)"/>
 
-      <!-- Animated streamlines (currents) -->
       <g clip-path="url(#oceanClip)" opacity="0.35">
         <path class="stream" d="M 155 195 Q 220 185 290 190 Q 360 195 430 185 Q 490 178 550 183 Q 600 187 625 192"
               fill="none" stroke="#7dd3fc" stroke-width="1.2" stroke-dasharray="8,6"/>
@@ -350,11 +628,9 @@
               fill="none" stroke="#a5f3fc" stroke-width="0.8" stroke-dasharray="6,8"/>
       </g>
 
-      <!-- Top header bar -->
       <rect x="0" y="0" width="680" height="40" fill="#0D2145"/>
       <rect x="0" y="39" width="680" height="1" fill="#1e3a5f"/>
 
-      <!-- Spiral logo mark in header (simplified) -->
       <g transform="translate(12, 20)">
         <circle cx="0" cy="0" r="9" fill="none" stroke="#4A90D9" stroke-width="1.5"/>
         <circle cx="0" cy="0" r="5" fill="none" stroke="#4A90D9" stroke-width="1"/>
@@ -363,29 +639,21 @@
       <text x="28" y="15" font-family="sans-serif" font-size="9" fill="#94B8D8" font-weight="500" letter-spacing="2">THE OCEAN BULLETIN</text>
       <text x="28" y="27" font-family="sans-serif" font-size="8" fill="#4A90D9" letter-spacing="1">Powered by AMPHITRITE</text>
 
-      <!-- 14-day tag in header -->
       <rect x="565" y="12" width="100" height="18" rx="9" fill="#1e3a5f"/>
       <text x="615" y="24" font-family="sans-serif" font-size="8" fill="#7dd3fc" text-anchor="middle" letter-spacing="0.5">14-DAY FORECAST</text>
 
-      <!-- Left sidebar -->
       <rect x="0" y="40" width="140" height="350" fill="#0D2145"/>
       <rect x="139" y="40" width="1" height="350" fill="#1e3a5f"/>
 
-      <!-- Sidebar pill buttons -->
-      <!-- Currents (active) -->
       <rect x="10" y="60" width="120" height="30" rx="15" fill="#185FA5"/>
       <text x="70" y="79" font-family="sans-serif" font-size="9" fill="#fff" text-anchor="middle" font-weight="600">⌀ Currents</text>
-      <!-- Wind -->
       <rect x="10" y="98" width="120" height="30" rx="15" fill="#1e3a5f"/>
       <text x="70" y="117" font-family="sans-serif" font-size="9" fill="#7098C8" text-anchor="middle">≋ Wind</text>
-      <!-- Waves -->
       <rect x="10" y="136" width="120" height="30" rx="15" fill="#1e3a5f"/>
       <text x="70" y="155" font-family="sans-serif" font-size="9" fill="#7098C8" text-anchor="middle">∿ Waves</text>
-      <!-- More -->
       <rect x="10" y="174" width="120" height="30" rx="15" fill="#1e3a5f"/>
       <text x="70" y="193" font-family="sans-serif" font-size="9" fill="#7098C8" text-anchor="middle">⊕ More</text>
 
-      <!-- Sidebar scale -->
       <text x="20" y="280" font-family="sans-serif" font-size="8" fill="#4A90D9">kn</text>
       <text x="20" y="296" font-family="sans-serif" font-size="7" fill="#7098C8">2.0+</text>
       <text x="20" y="326" font-family="sans-serif" font-size="7" fill="#7098C8">1.0</text>
@@ -400,48 +668,41 @@
         </linearGradient>
       </defs>
 
-      <!-- Direct route (blue dashed, straighter) -->
       <path d="M 175 305 Q 300 210 450 170 Q 540 150 620 145"
             fill="none" stroke="#4A90D9" stroke-width="2" stroke-dasharray="8,5" opacity="0.75"/>
 
-      <!-- Departure dot -->
       <circle cx="175" cy="305" r="5" fill="#4A90D9"/>
       <text x="185" y="309" font-family="sans-serif" font-size="8" fill="#7dd3fc">Departure</text>
 
-      <!-- Arrival dot -->
       <circle cx="620" cy="145" r="5" fill="#22C55E"/>
       <text x="575" y="140" font-family="sans-serif" font-size="8" fill="#86efac">Arrival</text>
 
-      <!-- Optimised route (green solid, arcs north through Gulf Stream) -->
       <path d="M 175 305 Q 240 265 310 220 Q 370 180 420 165 Q 490 148 560 150 Q 595 151 620 145"
             fill="none" stroke="#22C55E" stroke-width="2.5" opacity="0.9"/>
 
-      <!-- Route labels -->
       <rect x="245" y="263" width="78" height="16" rx="8" fill="#1e3a5f" opacity="0.85"/>
       <text x="284" y="274" font-family="sans-serif" font-size="7.5" fill="#7dd3fc" text-anchor="middle">Voyage plan</text>
 
       <rect x="340" y="168" width="92" height="16" rx="8" fill="#14532d" opacity="0.9"/>
       <text x="386" y="179" font-family="sans-serif" font-size="7.5" fill="#86efac" text-anchor="middle">Amphitrite optimised</text>
 
-      <!-- Bottom timeline strip -->
+      <!-- Bottom timeline strip — label on its own line above the dates to clear "20 May" -->
       <rect x="140" y="365" width="540" height="55" fill="#0D2145"/>
       <rect x="140" y="365" width="540" height="1" fill="#1e3a5f"/>
-      <text x="160" y="382" font-family="sans-serif" font-size="7.5" fill="#4A90D9" font-weight="500">MAX FORECAST</text>
-      <text x="160" y="393" font-family="sans-serif" font-size="7" fill="#7098C8">14 days</text>
+      <text x="160" y="379" font-family="sans-serif" font-size="7.5" fill="#4A90D9" font-weight="500">MAX FORECAST · 14 days</text>
 
-      <!-- Timeline date ticks -->
-      <text x="215" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">20 May</text>
-      <text x="268" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">22 May</text>
-      <text x="321" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">24 May</text>
-      <text x="374" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">26 May</text>
-      <text x="427" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">28 May</text>
-      <text x="480" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">30 May</text>
-      <text x="533" y="385" font-family="sans-serif" font-size="7" fill="#7098C8">01 Jun</text>
-      <text x="586" y="385" font-family="sans-serif" font-size="7" fill="#7dd3fc">03 Jun</text>
+      <!-- Timeline date ticks (own row below the label, evenly spaced) -->
+      <text x="160" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">20 May</text>
+      <text x="225" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">22 May</text>
+      <text x="290" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">24 May</text>
+      <text x="355" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">26 May</text>
+      <text x="420" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">28 May</text>
+      <text x="485" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">30 May</text>
+      <text x="550" y="402" font-family="sans-serif" font-size="7" fill="#7098C8">01 Jun</text>
+      <text x="612" y="402" font-family="sans-serif" font-size="7" fill="#7dd3fc">03 Jun</text>
 
-      <!-- Progress line on timeline -->
-      <rect x="215" y="394" width="200" height="2" rx="1" fill="#185FA5"/>
-      <rect x="415" y="394" width="155" height="2" rx="1" fill="#1e3a5f"/>
+      <rect x="160" y="409" width="245" height="2" rx="1" fill="#185FA5"/>
+      <rect x="405" y="409" width="205" height="2" rx="1" fill="#1e3a5f"/>
 
     </svg>
     <p class="platform-caption">Pensacola (US) → Stavanger (Norway), May–June 2025. 160m pipelay vessel. Amphitrite-optimised route surfed the Gulf Stream for 3 days: +2.7 kn without additional fuel. Source: Amphitrite white paper, April 2026 (AIS-validated).</p>
@@ -449,8 +710,11 @@
 
   <div class="divider"></div>
 
-  <!-- 8. Operational use cases -->
-  <div class="section-label">Operational use cases</div>
+  <!-- 11. Operational use cases -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Operational use cases
+  </div>
   <h2 class="section-title">Where it fits into maritime operations.</h2>
 
   <div class="benefits-list">
@@ -514,8 +778,11 @@
 
   <div class="divider"></div>
 
-  <!-- 9. Technology -->
-  <div class="section-label">How the data is built</div>
+  <!-- 12. Technology -->
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    How the data is built
+  </div>
   <h2 class="section-title">From satellite to operational forecast in one pipeline.</h2>
 
   <div class="data-steps">
@@ -539,245 +806,9 @@
 
   <div class="divider"></div>
 
-  <!-- 10. Vessel profile -->
-  <div class="section-label">Custom vessel model</div>
-  <h2 class="section-title">Where accuracy becomes personal to your vessel.</h2>
-
-  <div class="profile-box" style="margin-bottom:16px;">
-    <p><b>Generic vessel type assumptions introduce systematic routing error.</b> A custom vessel model removes that error by learning how your specific vessel responds to every combination of wind angle, wave direction, and current — using your actual voyage history.</p>
-
-    <div class="assist-list" style="margin-top:14px;">
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Position logs, speed through water, speed over ground, heading, COG — from your AIS and onboard sensors</div></div>
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Roll and pitch data, hull dimensions, engine power curves — from vessel records</div></div>
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Output: a performance polar diagram — speed gain or loss at every wind angle, wave direction, and current strength</div></div>
-      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Result: the platform knows exactly how your vessel responds to conditions — not a generic assumption</div></div>
-    </div>
-
-    <p style="margin-top:14px;">Better routing leads to more accurate ETAs, better fuel prediction, and routing decisions that account for your vessel's actual handling characteristics under load.</p>
-    <span class="profile-stat">Less than 5% MAPE on custom-trained vessel models</span>
-  </div>
-
-  <!-- Polar diagram SVG — Beaufort-style, matching Ocean Bulletin performance polars -->
-  <div class="polar-wrap">
-    <svg viewBox="0 0 440 440" width="100%" style="max-width:440px;" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="polarBounds">
-          <rect x="0" y="0" width="440" height="440"/>
-        </clipPath>
-        <radialGradient id="whiteCenter" cx="30" cy="275" r="68" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
-          <stop offset="65%" stop-color="#ffffff" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="scaleFade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#b91c1c"/>
-          <stop offset="78%" stop-color="#ffffff"/>
-          <stop offset="100%" stop-color="#16a34a"/>
-        </linearGradient>
-      </defs>
-
-      <!-- Background -->
-      <rect width="440" height="440" rx="12" fill="#ffffff"/>
-
-      <!-- SPEED label -->
-      <text x="218" y="14" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#94a3b8" letter-spacing="2" font-weight="500">SPEED</text>
-      <!-- Speed tab container -->
-      <rect x="63" y="18" width="310" height="36" rx="18" fill="#f1f5f9"/>
-      <!-- Active: 15 kn -->
-      <rect x="155" y="16" width="118" height="40" rx="20" fill="#5b9bd5"/>
-      <text x="115" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">11 kn</text>
-      <text x="214" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#ffffff" font-weight="600">15 kn</text>
-      <text x="313" y="40" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">18 kn</text>
-
-      <!-- DRAFT label -->
-      <text x="218" y="64" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#94a3b8" letter-spacing="2" font-weight="500">DRAFT</text>
-      <!-- Draft tab container -->
-      <rect x="63" y="68" width="310" height="36" rx="18" fill="#f1f5f9"/>
-      <!-- Active: 4.5 m -->
-      <rect x="63" y="66" width="118" height="40" rx="20" fill="#5b9bd5"/>
-      <text x="122" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#ffffff" font-weight="600">4.5 m</text>
-      <text x="218" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">5 m</text>
-      <text x="315" y="90" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">5.5 m</text>
-
-      <!-- POLAR diagram: cx=30, cy=275, R_max=155 -->
-      <!-- Colour wedge sectors (angle from top=0°, clockwise) -->
-      <g clip-path="url(#polarBounds)">
-        <!-- 0°–25°: strong orange-red (heavy head-seas speed loss) -->
-        <path d="M 30,275 L 30,120 A 155,155 0 0,1 95.5,134.6 Z" fill="#c2410c"/>
-        <!-- 25°–50°: orange-red -->
-        <path d="M 30,275 L 95.5,134.6 A 155,155 0 0,1 148.7,175.3 Z" fill="#ea580c"/>
-        <!-- 50°–80°: orange -->
-        <path d="M 30,275 L 148.7,175.3 A 155,155 0 0,1 182.7,248 Z" fill="#f97316"/>
-        <!-- 80°–100°: pale amber (near beam, neutral zone) -->
-        <path d="M 30,275 L 182.7,248 A 155,155 0 0,1 182.7,302 Z" fill="#fde68a"/>
-        <!-- 100°–130°: very pale yellow (slight following) -->
-        <path d="M 30,275 L 182.7,302 A 155,155 0 0,1 148.7,374.7 Z" fill="#fef9c3"/>
-        <!-- 130°–160°: pale green (following seas, moderate gain) -->
-        <path d="M 30,275 L 148.7,374.7 A 155,155 0 0,1 83,420.7 Z" fill="#d1fae5"/>
-        <!-- 160°–180°: green (following seas, speed gain) -->
-        <path d="M 30,275 L 83,420.7 A 155,155 0 0,1 30,430 Z" fill="#6ee7b7"/>
-
-        <!-- White radial fade at centre (low Beaufort = less impact) -->
-        <circle cx="30" cy="275" r="68" fill="url(#whiteCenter)"/>
-
-        <!-- Beaufort ring outlines -->
-        <path d="M 30,236 A 39,39 0 1,1 30,314" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-        <path d="M 30,198 A 77,77 0 1,1 30,352" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-        <path d="M 30,159 A 116,116 0 1,1 30,391" fill="none" stroke="#d1d5db" stroke-width="1"/>
-        <path d="M 30,120 A 155,155 0 1,1 30,430" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
-
-        <!-- Angular reference lines from centre -->
-        <line x1="30" y1="275" x2="107.5" y2="140.8" stroke="#e2e8f0" stroke-width="0.8"/>
-        <line x1="30" y1="275" x2="164.2" y2="197.5" stroke="#e2e8f0" stroke-width="0.8"/>
-        <line x1="30" y1="275" x2="185" y2="275" stroke="#e2e8f0" stroke-width="0.8"/>
-        <line x1="30" y1="275" x2="164.2" y2="352.5" stroke="#e2e8f0" stroke-width="0.8"/>
-        <line x1="30" y1="275" x2="107.5" y2="409.2" stroke="#e2e8f0" stroke-width="0.8"/>
-      </g>
-
-      <!-- Beaufort ring labels on θ=90° horizontal axis -->
-      <text x="55" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">2</text>
-      <text x="96" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">4</text>
-      <text x="136" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">6</text>
-      <text x="175" y="280" font-family="DM Sans, sans-serif" font-size="11" fill="#1e3a5f" font-weight="600">8</text>
-      <text x="148" y="432" font-family="DM Sans, sans-serif" font-size="12" fill="#1e3a5f" font-weight="600">Beaufort</text>
-
-      <!-- Axis labels -->
-      <text x="5" y="127" font-family="DM Sans, sans-serif" font-size="14" fill="#1e3a5f" font-weight="700">0°</text>
-      <text x="190" y="270" font-family="DM Sans, sans-serif" font-size="14" fill="#1e3a5f" font-weight="700">90°</text>
-      <text x="108" y="118" font-family="DM Sans, sans-serif" font-size="12" fill="#64748b">Angle [deg]</text>
-
-      <!-- Colour scale bar -->
-      <text x="393" y="130" font-family="DM Sans, sans-serif" font-size="11" fill="#b91c1c" font-weight="600">+7</text>
-      <rect x="380" y="134" width="14" height="255" rx="7" fill="url(#scaleFade)"/>
-      <text x="393" y="322" font-family="DM Sans, sans-serif" font-size="11" fill="#64748b">0</text>
-      <text x="393" y="394" font-family="DM Sans, sans-serif" font-size="11" fill="#16a34a" font-weight="600">-2</text>
-    </svg>
-  </div>
-  <p class="platform-caption" style="text-align:center;">Vessel performance polar — speed change (%) at each wind/current angle and sea state (Beaufort). Trained from your vessel's own voyage data. Less than 5% MAPE on custom-trained models.</p>
-
-  <div class="divider"></div>
-
-  <!-- 11. Case studies -->
-  <div class="section-label">Real-world results</div>
-  <h2 class="section-title">AIS-validated case studies from the white paper.</h2>
-  <p class="body-text" style="margin-bottom:1rem;">All figures are validated against independent AIS data. Speed over ground, speed through water, and fuel consumption cross-referenced against HIRES-CURRENTS predictions.</p>
-
-  <div class="case-grid">
-
-    <!-- Case 1: Med Ro-Ro -->
-    <div class="case-card">
-      <div class="case-header">
-        <div class="case-badge">Validated — AIS data</div>
-        <div>
-          <div class="case-title">Mediterranean short-sea routing — Ro-Ro vessel</div>
-          <div class="case-route">Tangier (Morocco) → Tunis · November 2023</div>
-        </div>
-      </div>
-      <div class="case-desc">Standard route would have faced several counter-current coastal eddies along the Algerian coast. Amphitrite's optimised route — a slight northward detour provided 24 hours in advance — avoided the eddies entirely.</div>
-      <div class="case-stats">
-        <span class="case-stat">+0.6 kn mean SOG improvement</span>
-        <span class="case-stat">Over 1 hour saved</span>
-        <span class="case-stat">Up to 4% fuel saving</span>
-        <span class="case-stat">€2,300–€3,800 saved per equivalent voyage</span>
-      </div>
-      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
-    </div>
-
-    <!-- Case 2: North Atlantic pipelay -->
-    <div class="case-card">
-      <div class="case-header">
-        <div class="case-badge">Validated — AIS data</div>
-        <div>
-          <div class="case-title">North Atlantic Gulf Stream transit — pipelay vessel</div>
-          <div class="case-route">Pensacola (US) → Stavanger (Norway) · May–June 2025 · 160m vessel</div>
-        </div>
-      </div>
-      <div class="case-desc">Vessel routed through the Gulf Stream for 3 days using 6 additional Amphitrite waypoints. Set speed 14.3 kn; peak SOG 18.8 kn — the difference accounted for by the current, not additional fuel. SOG-STW measurement matches HIRES-CURRENTS prediction.</div>
-      <div class="case-stats">
-        <span class="case-stat">+2.7 kn for 3 days — no extra fuel</span>
-        <span class="case-stat">Half a day faster at the same fuel burn</span>
-        <span class="case-stat">~€28,800 total saving</span>
-      </div>
-      <div class="case-desc" style="margin-top:8px;">The speed gain came entirely from surfing the Gulf Stream — not increased engine power. Combined with standard weather routing (wind + wave): <b>up to 10–15% total fuel savings</b> for a trans-Atlantic voyage.</div>
-      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
-    </div>
-
-    <!-- Case 3: Container feeder route analysis -->
-    <div class="case-card">
-      <div class="case-header">
-        <div class="case-badge">1-year analysis</div>
-        <div>
-          <div class="case-title">Med container route — cost of undetected adverse currents</div>
-          <div class="case-route">Port-Said → Tangier-Med · 2,750 TEU feeder · 2022 statistical analysis</div>
-        </div>
-      </div>
-      <div class="case-desc">Statistical analysis of a full year of Suez–Gibraltar container feeder operations. Adverse currents (undetected by standard routing tools) generated systematic fuel over-consumption on repeated voyages.</div>
-      <div class="case-stats">
-        <span class="case-stat">€2,300–€3,800 per voyage in extra fuel costs</span>
-        <span class="case-stat">12–20 T additional CO₂ per voyage</span>
-        <span class="case-stat">Vessel: 18 kn · ~35 T/day fuel</span>
-      </div>
-      <div class="case-desc" style="margin-top:8px;">Multiplied across a year of Med trading: material, measurable fleet cost exposure that standard weather routing tools do not surface.</div>
-      <div class="case-source">Source: Amphitrite white paper, April 2026.</div>
-    </div>
-
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- 12. Calculator -->
-  <div class="section-label">Estimate fuel savings</div>
-  <h2 class="section-title">What this means for your fleet.</h2>
-
-  <div class="calc-header">
-    <div class="calc-header-label">Fuel saving potential</div>
-  </div>
-  <div class="calc-box">
-    <label>Fuel type</label>
-    <div class="fuel-tabs">
-      <div class="fuel-tab active" onclick="setFuel(550, this)">HFO — 550 EUR/t</div>
-      <div class="fuel-tab" onclick="setFuel(700, this)">VLSFO — 700 EUR/t</div>
-      <div class="fuel-tab" onclick="setFuel(1000, this)">MGO — 1,000 EUR/t</div>
-    </div>
-
-    <div class="calc-row">
-      <div class="calc-field">
-        <label>Daily consumption (tonnes/day)</label>
-        <input class="calc-input" id="consumption" type="number" value="30" min="5" max="200" oninput="calcUpdate()">
-      </div>
-      <div class="calc-field">
-        <label>Sea days per year</label>
-        <input class="calc-input" id="seadays" type="number" value="220" min="50" max="365" oninput="calcUpdate()">
-      </div>
-    </div>
-
-    <div class="ets-row">
-      <input type="checkbox" id="etsToggle" onchange="calcUpdate()">
-      <label for="etsToggle">Include EU ETS carbon cost (approx. 70 EUR/t CO₂, per white paper)</label>
-    </div>
-
-    <div class="calc-result">
-      <div class="calc-result-base" id="calc-base">Annual fuel spend: calculating…</div>
-      <div class="calc-result-row">
-        <span class="calc-result-label">Currents alone — validated, Med (4%)</span>
-        <span class="calc-result-value" id="r1">—</span>
-      </div>
-      <div class="calc-result-row">
-        <span class="calc-result-label">Currents alone — validated, N-Atlantic (8–9%)</span>
-        <span class="calc-result-value" id="r2">—</span>
-      </div>
-      <div class="calc-result-row">
-        <span class="calc-result-label">Full MetOcean routing — wind + waves + currents (10–15%)</span>
-        <span class="calc-result-value" id="r3">—</span>
-      </div>
-    </div>
-    <div class="calc-note">Savings validated from AIS data on real voyages. Actual savings depend on route, vessel type, and prevailing conditions. EU ETS cost estimate based on ~3.2 t CO₂/t HFO; EU ETS price approx. €70/t CO₂ (per Amphitrite white paper, April 2026).</div>
-  </div>
-
-  <div class="divider"></div>
-
   <!-- 13. Ocean Bulletin CTA block -->
   <div class="ob-cta">
+    <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
     <div class="ob-cta-label">Try it on your own route</div>
     <div class="ob-cta-title">See it for your own route.</div>
     <div class="ob-cta-text">Create an Ocean Bulletin account and plan an actual voyage. The platform shows you how Amphitrite data compares to the standard forecast on your specific passage — with your ports, your dates, your vessel type.</div>
@@ -788,7 +819,10 @@
   <div class="divider"></div>
 
   <!-- 14. FAQ -->
-  <div class="section-label">Common questions</div>
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Common questions
+  </div>
   <h2 class="section-title">Practical answers for maritime teams.</h2>
 
   <div class="faq-list">
@@ -854,7 +888,10 @@
 
   <!-- 16. Final CTA -->
   <div class="divider"></div>
-  <div class="section-label">Next step</div>
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
+    Next step
+  </div>
   <h2 class="section-title">Book a working session.</h2>
   <p class="body-text">30 minutes with the Amphitrite team. Bring a route, a vessel, or a specific operational question — we'll show you exactly how the data performs on it.</p>
 
@@ -878,11 +915,23 @@
     <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. <a href="https://bulletin.amphitrite.fr/" style="color:#185FA5; font-weight:500;" target="_blank">bulletin.amphitrite.fr →</a></div>
   </div>
 
+  <!-- 17. Footer with website link -->
+  <div class="site-footer">
+    <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
+    <div>
+      <div class="ft-name">Amphitrite</div>
+      <div class="logo-sub">Ocean Data Intelligence</div>
+    </div>
+    <div class="ft-links">
+      <a href="https://www.amphitrite.fr/" target="_blank">amphitrite.fr</a>
+      <a href="https://bulletin.amphitrite.fr/" target="_blank">Ocean Bulletin</a>
+    </div>
+  </div>
 
 </div>
 
 <script>
-  // FAQ toggle
+  // ===== FAQ toggle =====
   function toggleFaq(el) {
     const ans = el.nextElementSibling;
     const tog = el.querySelector('.faq-toggle');
@@ -892,70 +941,114 @@
     if (!isOpen) { ans.classList.add('open'); tog.textContent = '−'; }
   }
 
-  // Calculator
-  let fuelPrice = 550;
+  // ===== Interactive performance polar =====
+  let vmSpeed = 10.5;   // kn
+  let vmDraft = 4;      // m
 
-  function setFuel(price, el) {
-    fuelPrice = price;
-    document.querySelectorAll('.fuel-tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    calcUpdate();
+  // Geometry (matches the SVG overlay): half-disk, centre on left, opening right.
+  // 0° at top, 90° at right, 180° at bottom.
+  const P = { cx: 40, cy: 215, R: 170 };
+
+  // Physically-motivated speed-loss model (kn). Positive = speed lost.
+  // angleDeg: 0 = head seas .. 180 = following seas. beaufort 0..10.
+  function speedLoss(angleDeg, beaufort, speedKn, draftM) {
+    const a = angleDeg * Math.PI / 180;
+    // Directional shape: full loss into head seas, tapering to a slight push following.
+    const dir = 0.16 + 0.84 * Math.pow((1 + Math.cos(a)) / 2, 1.25);
+    // Sea-state growth: added resistance rises faster than linearly with Beaufort.
+    const bf = Math.pow(beaufort / 10, 1.85);
+    // Speed factor: a faster ship sheds more absolute speed for the same added resistance.
+    const sf = 0.55 + 0.65 * (speedKn / 10.5);
+    // Draft factor: deeper draft = more wetted area / resistance.
+    const df = Math.pow(draftM / 4, 0.55);
+    const Lmax = 7.0; // peak loss at Beaufort 10, head seas, reference speed/draft
+    let v = Lmax * bf * dir * sf * df;
+    // Following seas can yield a small net gain (surf / current push) at moderate sea states.
+    const follow = Math.max(0, -Math.cos(a) - 0.25); // >0 only abaft the beam
+    v -= 1.4 * follow * Math.pow(beaufort / 10, 1.1) * (0.7 + 0.3 * sf);
+    return v; // kn
   }
 
-  function calcUpdate() {
-    const consumption = parseFloat(document.getElementById('consumption').value) || 30;
-    const seadays = parseFloat(document.getElementById('seadays').value) || 220;
-    const ets = document.getElementById('etsToggle').checked;
-
-    const annualTonnes = consumption * seadays;
-    const baseCost = annualTonnes * fuelPrice;
-
-    // ETS cost: ~3.2 tCO2 per t HFO, €210/tCO2
-    const etsCostPerTonne = ets ? 3.2 * 70 : 0;
-    const totalPerTonne = fuelPrice + etsCostPerTonne;
-    const totalBase = annualTonnes * totalPerTonne;
-
-    document.getElementById('calc-base').textContent =
-      'Annual fuel spend: €' + Math.round(baseCost / 1000).toLocaleString() + 'k'
-      + (ets ? ' · with EU ETS: €' + Math.round(totalBase / 1000).toLocaleString() + 'k' : '');
-
-    // Row 1: 4% (Med, validated)
-    const s1lo = totalBase * 0.04;
-    document.getElementById('r1').textContent = '€' + Math.round(s1lo / 1000).toLocaleString() + 'k/yr';
-
-    // Row 2: 8-9% (N-Atlantic, validated)
-    const s2lo = totalBase * 0.08;
-    const s2hi = totalBase * 0.09;
-    document.getElementById('r2').textContent =
-      '€' + Math.round(s2lo / 1000).toLocaleString() + '–' + Math.round(s2hi / 1000).toLocaleString() + 'k/yr';
-
-    // Row 3: 10-15% (combined)
-    const s3lo = totalBase * 0.10;
-    const s3hi = totalBase * 0.15;
-    document.getElementById('r3').textContent =
-      '€' + Math.round(s3lo / 1000).toLocaleString() + '–' + Math.round(s3hi / 1000).toLocaleString() + 'k/yr';
+  // Colour ramp over [-2 .. +7] kn matching the scale bar.
+  function lossColor(v) {
+    const stops = [
+      { v: -2,  c: [22, 163, 74]  },  // green
+      { v: 0,   c: [255, 255, 255]},  // white
+      { v: 2.5, c: [245, 158, 11] },  // amber
+      { v: 4.5, c: [234, 88, 12]  },  // orange
+      { v: 7,   c: [185, 28, 28]  }   // red
+    ];
+    if (v <= stops[0].v) return stops[0].c;
+    if (v >= stops[stops.length - 1].v) return stops[stops.length - 1].c;
+    for (let i = 0; i < stops.length - 1; i++) {
+      const s0 = stops[i], s1 = stops[i + 1];
+      if (v >= s0.v && v <= s1.v) {
+        const t = (v - s0.v) / (s1.v - s0.v);
+        return [
+          Math.round(s0.c[0] + t * (s1.c[0] - s0.c[0])),
+          Math.round(s0.c[1] + t * (s1.c[1] - s0.c[1])),
+          Math.round(s0.c[2] + t * (s1.c[2] - s0.c[2]))
+        ];
+      }
+    }
+    return [255, 255, 255];
   }
 
-  calcUpdate();
+  function drawPolar() {
+    const cv = document.getElementById('polarCanvas');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+    const img = ctx.createImageData(W, H);
+    const data = img.data;
+    const cx = P.cx, cy = P.cy, R = P.R;
+    for (let py = 0; py < H; py++) {
+      for (let px = 0; px < W; px++) {
+        const dx = px - cx, dy = py - cy;
+        if (dx < 0) continue;                 // right half only
+        const r = Math.sqrt(dx * dx + dy * dy);
+        if (r > R) continue;                  // inside max Beaufort ring
+        const ang = Math.atan2(dx, -dy) * 180 / Math.PI; // 0=top .. 180=bottom
+        const beaufort = (r / R) * 10;
+        const v = speedLoss(ang, beaufort, vmSpeed, vmDraft);
+        const c = lossColor(v);
+        let alpha = 255;
+        if (r > R - 1.5) alpha = Math.max(0, 255 * (R - r) / 1.5); // soft outer edge
+        const idx = (py * W + px) * 4;
+        data[idx] = c[0]; data[idx + 1] = c[1]; data[idx + 2] = c[2]; data[idx + 3] = alpha;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
 
-  // Google Calendar link
+  function wireTabs(groupId, setter) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.vm-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        group.querySelectorAll('.vm-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        setter(parseFloat(tab.dataset.val));
+        drawPolar();
+      });
+    });
+  }
+  wireTabs('vm-speed', v => vmSpeed = v);
+  wireTabs('vm-draft', v => vmDraft = v);
+  drawPolar();
+
+  // ===== Calendar links =====
   document.getElementById('gcal-link').href =
     'https://calendar.google.com/calendar/render?action=TEMPLATE'
     + '&text=Amphitrite+Working+Session'
     + '&details=Marine+weather+intelligence+session+with+Amphitrite'
     + '&location=https://cal.com/noah-amphitrite/meeting';
 
-  // Apple Calendar (.ics)
   function downloadIcs() {
     const now = new Date();
     const start = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     start.setHours(10, 0, 0, 0);
     const end = new Date(start.getTime() + 30 * 60 * 1000);
-
-    function fmt(d) {
-      return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-    }
-
+    function fmt(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
     const ics = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT',
       'DTSTART:' + fmt(start),
@@ -965,7 +1058,6 @@
       'URL:https://cal.com/noah-amphitrite/meeting',
       'END:VEVENT', 'END:VCALENDAR'
     ].join('\r\n');
-
     const blob = new Blob([ics], { type: 'text/calendar' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
