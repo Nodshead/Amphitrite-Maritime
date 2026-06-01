@@ -231,6 +231,13 @@
   <a href="https://cal.com/noah-amphitrite/meeting" class="cta-primary" target="_blank">Book a working session</a>
   <a href="https://bulletin.amphitrite.fr/" class="cta-secondary" target="_blank" style="font-size:15px; font-weight:500; border-color:#185FA5; color:#185FA5;">Plan a route now →</a>
 
+  <!-- Micro "save for later" strip -->
+  <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#f1f5f9; border-radius:9px; margin-top:6px;">
+    <span style="font-size:12px; color:#64748b; flex:1;">No time right now? Save this page as a reminder for later.</span>
+    <button onclick="downloadIcs()" style="display:flex; align-items:center; gap:5px; font-size:11px; font-weight:500; color:#185FA5; background:#E6F1FB; border:1px solid #B5D4F4; padding:5px 10px; border-radius:7px; cursor:pointer; white-space:nowrap; font-family:inherit;">🍎 Save for later</button>
+    <a id="gcal-link-top" href="#" target="_blank" style="display:flex; align-items:center; gap:5px; font-size:11px; font-weight:500; color:#185FA5; background:#E6F1FB; border:1px solid #B5D4F4; padding:5px 10px; border-radius:7px; text-decoration:none; white-space:nowrap;">📅 Google</a>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 4. Trusted by -->
@@ -887,12 +894,13 @@
 
   <a href="https://cal.com/noah-amphitrite/meeting" class="cta-primary" target="_blank">Book a working session</a>
 
+  <p style="font-size:13px; color:#64748b; margin-bottom:8px;">Not ready to book yet? Save a reminder for tomorrow at 16:00 (NL) / 10:00 (Florida) — the link brings you straight back to this page.</p>
   <div class="cal-row">
     <button class="cal-btn" onclick="downloadIcs()">
-      <span class="cal-icon">🍎</span> Apple Calendar
+      <span class="cal-icon">🍎</span> Remind me — Apple
     </button>
     <a class="cal-btn" id="gcal-link" href="#" target="_blank">
-      <span class="cal-icon">📅</span> Google Calendar
+      <span class="cal-icon">📅</span> Remind me — Google
     </a>
   </div>
 
@@ -1069,31 +1077,63 @@
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawMap(); }, 200); });
   drawPolar();
 
-  // ===== Calendar links =====
-  document.getElementById('gcal-link').href =
-    'https://calendar.google.com/calendar/render?action=TEMPLATE'
-    + '&text=Amphitrite+Working+Session'
-    + '&details=Marine+weather+intelligence+session+with+Amphitrite'
-    + '&location=https://cal.com/noah-amphitrite/meeting';
+  // ===== Calendar reminder — tomorrow 16:00 CEST (14:00 UTC) / 10:00 Florida EDT =====
+  // Links back to THIS page so they can re-read, plus the booking link.
+  const PAGE_URL = 'https://nodshead.github.io/Amphitrite-Maritime/';
+  const BOOK_URL = 'https://cal.com/noah-amphitrite/meeting';
+
+  function reminderTimes() {
+    // Tomorrow at 14:00 UTC = 16:00 CEST = 10:00 EDT
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() + 1);
+    d.setUTCHours(14, 0, 0, 0);
+    const end = new Date(d.getTime() + 30 * 60 * 1000);
+    return { start: d, end };
+  }
+
+  function fmtUtc(d) {
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+
+  function buildGcalLink(start, end) {
+    const desc = encodeURIComponent(
+      'Read the Amphitrite overview: ' + PAGE_URL +
+      '\n\nBook a working session: ' + BOOK_URL
+    );
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent('Review Amphitrite — ocean routing for your fleet')
+      + '&dates=' + fmtUtc(start) + '/' + fmtUtc(end)
+      + '&details=' + desc
+      + '&location=' + encodeURIComponent(PAGE_URL);
+  }
+
+  function setGcalLinks() {
+    const { start, end } = reminderTimes();
+    const url = buildGcalLink(start, end);
+    document.getElementById('gcal-link').href = url;
+    const top = document.getElementById('gcal-link-top');
+    if (top) top.href = url;
+  }
+  setGcalLinks();
 
   function downloadIcs() {
-    const now = new Date();
-    const start = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    start.setHours(10, 0, 0, 0);
-    const end = new Date(start.getTime() + 30 * 60 * 1000);
-    function fmt(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+    const { start, end } = reminderTimes();
     const ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT',
-      'DTSTART:' + fmt(start), 'DTEND:' + fmt(end),
-      'SUMMARY:Amphitrite Working Session',
-      'DESCRIPTION:Marine weather intelligence session. Book at https://cal.com/noah-amphitrite/meeting',
-      'URL:https://cal.com/noah-amphitrite/meeting',
-      'END:VEVENT', 'END:VCALENDAR'
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      'DTSTART:' + fmtUtc(start),
+      'DTEND:' + fmtUtc(end),
+      'SUMMARY:Review Amphitrite — ocean routing for your fleet',
+      'DESCRIPTION:Read the Amphitrite overview: ' + PAGE_URL + '\\n\\nBook a working session: ' + BOOK_URL,
+      'URL:' + PAGE_URL,
+      'END:VEVENT',
+      'END:VCALENDAR'
     ].join('\r\n');
     const blob = new Blob([ics], { type: 'text/calendar' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'amphitrite-session.ics';
+    a.download = 'amphitrite-reminder.ics';
     a.click();
   }
 </script>
