@@ -266,7 +266,7 @@
     Custom vessel model
   </div>
   <h2 class="section-title-lg">Build your own custom vessel model for more accurate routing.</h2>
-  <p class="body-text">A custom model learns how <i>your</i> ship responds to every combination of wind angle, wave direction, and current — from your own voyage history. Try the speed and draft settings below: the performance polar updates live to show the speed change at every angle and sea state.</p>
+  <p class="body-text">A custom model learns how <i>your</i> ship responds to every combination of wind angle, wave direction, and current — from your own voyage history. The performance polar below shows speed change at every angle and sea state for a representative vessel.</p>
 
   <div class="vm-card">
     <div class="vm-grid">
@@ -305,20 +305,10 @@
         </svg>
       </div>
 
-      <!-- Control panel + interactive polar -->
+      <!-- Control panel + polar display -->
       <div class="vm-panel">
-        <div class="vm-ctrl-label">Service speed</div>
-        <div class="vm-tabs" id="vm-speed">
-          <div class="vm-tab" data-val="8">8 kn</div>
-          <div class="vm-tab active" data-val="10.5">10.5 kn</div>
-          <div class="vm-tab" data-val="14">14 kn</div>
-        </div>
-        <div class="vm-ctrl-label">Draft</div>
-        <div class="vm-tabs" id="vm-draft">
-          <div class="vm-tab active" data-val="4">4 m</div>
-          <div class="vm-tab" data-val="5">5 m</div>
-          <div class="vm-tab" data-val="6">6 m</div>
-        </div>
+        <div class="vm-ctrl-label" style="margin-bottom:4px;">Service speed · 10.5 kn</div>
+        <div class="vm-ctrl-label" style="margin-bottom:14px;">Draft · 4 m</div>
 
         <div class="vm-polar-wrap">
           <canvas id="polarCanvas"></canvas>
@@ -394,10 +384,10 @@
   <!-- 6. Our AI-validated case studies -->
   <div class="section-label">
     <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
-    Our case studies · AIS-validated
+    Voyage studies · outcomes validated
   </div>
-  <h2 class="section-title-lg">Real voyages, validated against AIS data.</h2>
-  <p class="body-text" style="margin-bottom:1rem;">Every figure below is cross-referenced against independent AIS data — speed over ground, speed through water, and fuel consumption checked against HIRES-CURRENTS predictions. Straight from the Amphitrite white paper.</p>
+  <h2 class="section-title-lg">Proven results from real-world deployments.</h2>
+  <p class="body-text" style="margin-bottom:1rem;">These are voyages conducted with existing clients where Amphitrite routing was used and the outcome independently confirmed. Every figure is cross-referenced against AIS data — speed over ground, speed through water, and fuel consumption checked against HIRES-CURRENTS predictions.</p>
 
   <div class="case-grid">
 
@@ -467,25 +457,25 @@
     <svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#185FA5" stroke-width="1.4"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="#185FA5" stroke-width="1.1"/><circle cx="9" cy="9" r="1.6" fill="#185FA5"/></svg>
     How we get our data
   </div>
-  <h2 class="section-title-lg">From satellite and buoy to a 3.0 km forecast.</h2>
-  <p class="body-text">Amphitrite combines high-resolution ocean currents, waves, and wind into one operational picture — available as the browser-based <b>Ocean Bulletin</b> platform or as a <b>MetOcean API</b>. The current model is what sets it apart:</p>
+  <h2 class="section-title-lg">How we get this data — and why it's more accurate.</h2>
+  <p class="body-text">Amphitrite combines high-resolution ocean currents, waves, and wind into one operational picture. The current model is what sets it apart from everything else available:</p>
 
   <div class="data-steps">
     <div class="step">
       <div class="step-num">1</div>
-      <div class="step-text"><b>Observation ingestion</b> — satellite altimetry (SWOT + nadir), infrared SST, chlorophyll, and <b>165,000+ in-situ drifter and buoy measurements</b> across the North Atlantic and South Africa.</div>
+      <div class="step-text"><b>We take measurements from multiple sources</b> — satellite altimetry (SWOT + nadir), infrared sea surface temperature, chlorophyll, and <b>165,000+ in-situ drifter and buoy measurements</b> across the North Atlantic and South Africa. This is the raw observational foundation.</div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <div class="step-text"><b>HIRES-CURRENTS — our proprietary deep-learning AI current model</b>, developed with CNRS and École Polytechnique and trained end-to-end on observational data. It resolves the mesoscale eddies, current veins, and tidal signatures that numerical models miss — at <b>3.0 km</b>, 14-day horizon, global. <b>Validated against those 165,000+ independent in-situ measurements.</b></div>
+      <div class="step-text"><b>We run that through HIRES-CURRENTS — our proprietary deep-learning AI current model.</b> Trained end-to-end on that observational data, it resolves mesoscale eddies, current veins, and tidal signatures that numerical models miss entirely — at <b>3.0 km resolution</b>, 14-day horizon, global coverage. <b>Accuracy validated against those 165,000+ independent in-situ measurements.</b></div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <div class="step-text"><b>Wind &amp; wave integration</b> — ECMWF IFS (1/4°, hourly) wind; ECMWF WAM and ERA5 wave; regional tidal models (FES2014 global; AMM15 for the English Channel; Puertos del Estado for Gibraltar). All variables on one common grid.</div>
+      <div class="step-text"><b>Wind and waves are included.</b> We also have active research into how waves interact with ocean currents — this coupling gives more accurate wave characteristics in current-affected areas than standard wave models alone.</div>
     </div>
     <div class="step">
       <div class="step-num">4</div>
-      <div class="step-text"><b>Delivery</b> — wind, waves, and currents updated hourly, in Ocean Bulletin or via API (GPX, CSV, XML, JSON) compatible with major navigation and VMS systems. Hindcast, reanalysis, and forecast from one unified source.</div>
+      <div class="step-text"><b>You get an optimised route through our ocean data intelligence and routing tool — all in one place.</b> Ocean Bulletin or API, updated hourly, hindcast and forecast from a single unified source.</div>
     </div>
   </div>
 
@@ -902,7 +892,7 @@
 
   <div class="trial-box">
     <div class="trial-box-title">Try Ocean Bulletin — 14-day forecast, live.</div>
-    <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. <a href="https://bulletin.amphitrite.fr/" style="color:#185FA5; font-weight:500;" target="_blank">bulletin.amphitrite.fr →</a></div>
+    <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data. <a href="https://bulletin.amphitrite.fr/" style="color:#185FA5; font-weight:500;" target="_blank">bulletin.amphitrite.fr →</a></div>
   </div>
 
   <!-- 15. Footer with website link -->
@@ -1065,22 +1055,8 @@
     ctx.putImageData(img, 0, 0);
   }
 
-  function wireTabs(groupId, setter) {
-    const group = document.getElementById(groupId);
-    group.querySelectorAll('.vm-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        group.querySelectorAll('.vm-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        setter(parseFloat(tab.dataset.val));
-        drawPolar();
-      });
-    });
-  }
-  wireTabs('vm-speed', v => vmSpeed = v);
-  wireTabs('vm-draft', v => vmDraft = v);
-
   window.addEventListener('load', () => { drawMap(); drawPolar(); });
-  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawMap(); drawPolar(); }, 200); });
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawMap(); }, 200); });
   drawPolar();
 
   // ===== Calendar links =====
