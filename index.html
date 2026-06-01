@@ -307,10 +307,20 @@
 
       <!-- Control panel + polar display -->
       <div class="vm-panel">
-        <div class="vm-ctrl-label" style="margin-bottom:4px;">Service speed · 10.5 kn</div>
-        <div class="vm-ctrl-label" style="margin-bottom:14px;">Draft · 4 m</div>
+        <div class="vm-ctrl-label">Service speed</div>
+        <div class="vm-tabs" style="pointer-events:none;">
+          <div class="vm-tab">8 kn</div>
+          <div class="vm-tab active">10.5 kn</div>
+          <div class="vm-tab">14 kn</div>
+        </div>
+        <div class="vm-ctrl-label">Draft</div>
+        <div class="vm-tabs" style="pointer-events:none;">
+          <div class="vm-tab active">4 m</div>
+          <div class="vm-tab">5 m</div>
+          <div class="vm-tab">6 m</div>
+        </div>
 
-        <div class="vm-polar-wrap">
+        <div class="vm-polar-wrap" style="aspect-ratio:460/480; min-height:320px;">
           <canvas id="polarCanvas"></canvas>
           <!-- Axis / labels / scale overlay (same 460x430 viewBox as canvas) -->
           <svg viewBox="0 0 460 430" xmlns="http://www.w3.org/2000/svg">
