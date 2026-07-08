@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amphitrite – Shipping & Offshore Operations</title>
+<meta name="description" content="High-resolution ocean intelligence for maritime operations. Wind, waves, and ocean currents at 3.0 km resolution — hourly updates, 14-day forecast horizon. One integrated operational picture for routing, offshore workability, and passage planning.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.replace('no-js','js');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #040d1c;
+    background-image:
+      radial-gradient(1200px 600px at 85% -5%, rgba(24,95,165,0.16), transparent 60%),
+      radial-gradient(1000px 700px at -15% 30%, rgba(55,194,182,0.07), transparent 60%),
+      radial-gradient(900px 500px at 110% 75%, rgba(24,95,165,0.1), transparent 60%);
+    background-repeat: no-repeat; background-attachment: fixed;
+    font-family: 'DM Sans', sans-serif; color: #dbe7f6; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #185FA5; color: #fff; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; border-radius: 6px; }
+  .page { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  /* ---------- Scroll reveals ---------- */
+  html.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); transition-delay: var(--d, 0s); will-change: opacity, transform; }
+  html.js .reveal.in-view { opacity: 1; transform: none; }
+
+  /* ---------- Progress bar + nav ---------- */
+  #progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: linear-gradient(to right, #185FA5, #37c2b6); z-index: 60; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; gap: 12px; padding: 10px 18px; background: rgba(4,13,28,0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(125,211,252,0.12); }
+  .nav img { height: 30px; }
+  .nav-name { font-size: 14px; font-weight: 600; color: #f2f7fd; line-height: 1.1; }
+  .nav-sub { font-size: 10.5px; color: #7fa3cc; }
+  .nav-links { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+  .nav-links a { font-size: 12.5px; color: #9db9dc; text-decoration: none; padding: 7px 10px; border-radius: 8px; transition: color .2s, background .2s; }
+  .nav-links a:hover { color: #fff; background: rgba(125,211,252,0.1); }
+  .nav-cta { font-size: 12.5px; font-weight: 600; color: #fff !important; background: #185FA5; padding: 8px 14px !important; border-radius: 20px; }
+  .nav-cta:hover { background: #1b6cb8 !important; }
+  @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 92vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  #ocean3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero-fallback { position: absolute; inset: 0; background: linear-gradient(180deg, #04101f 0%, #0A1E3D 55%, #0d2c55 100%); display: none; }
+  html.no-webgl .hero-fallback { display: block; }
+  html.no-webgl #ocean3d { display: none; }
+  .hero-veil { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, rgba(4,13,28,0.05) 0%, rgba(4,13,28,0.38) 62%, rgba(4,13,28,0.92) 100%); pointer-events: none; }
+  .hero-inner { position: relative; z-index: 2; max-width: 760px; padding: 96px 1.5rem 72px; text-align: center; }
+  .hero-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #7dd3fc; background: rgba(24,95,165,0.28); border: 1px solid rgba(125,211,252,0.3); padding: 6px 14px; border-radius: 20px; margin-bottom: 1.2rem; backdrop-filter: blur(4px); }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5.4vw + .6rem, 3.1rem); font-weight: 500; line-height: 1.18; color: #f4f8fd; margin-bottom: 1rem; text-shadow: 0 2px 30px rgba(4,13,28,0.6); }
+  .hero-title em { font-style: normal; background: linear-gradient(115deg, #7dd3fc, #37c2b6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-sub { font-size: clamp(14px, 1.4vw + 8px, 16.5px); color: #b9cee8; line-height: 1.65; max-width: 620px; margin: 0 auto 1.8rem; }
+  .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-solid { display: inline-block; padding: 14px 28px; border-radius: 12px; background: linear-gradient(120deg, #185FA5, #1b6cb8); color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; position: relative; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease; box-shadow: 0 10px 30px rgba(24,95,165,0.4); }
+  .btn-solid::after { content: ''; position: absolute; top: 0; left: -70%; width: 40%; height: 100%; background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent); transform: skewX(-20deg); transition: left .6s ease; }
+  .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(24,95,165,0.55); }
+  .btn-solid:hover::after { left: 130%; }
+  .btn-ghost { display: inline-block; padding: 13px 26px; border-radius: 12px; border: 1px solid rgba(125,211,252,0.4); background: rgba(9,26,51,0.4); color: #cfe4f9; font-size: 14.5px; font-weight: 500; text-decoration: none; backdrop-filter: blur(4px); transition: background .25s, border-color .25s, transform .25s; }
+  .btn-ghost:hover { background: rgba(24,95,165,0.3); border-color: #7dd3fc; transform: translateY(-2px); }
+  .hero-scroll { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 2; color: #7fa3cc; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .hero-scroll::after { content: ''; width: 1px; height: 34px; background: linear-gradient(to bottom, #7dd3fc, transparent); animation: dropline 2.2s ease-in-out infinite; }
+  @keyframes dropline { 0%,100% { transform: scaleY(0.4); transform-origin: top; opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
+  html.js .hero-tag { animation: rise .8s cubic-bezier(.22,1,.36,1) .1s both; }
+  html.js .hero-title { animation: rise .8s cubic-bezier(.22,1,.36,1) .25s both; }
+  html.js .hero-sub { animation: rise .8s cubic-bezier(.22,1,.36,1) .4s both; }
+  html.js .hero-ctas { animation: rise .8s cubic-bezier(.22,1,.36,1) .55s both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Shared section furniture ---------- */
+  .divider { height: 1px; background: linear-gradient(to right, transparent, rgba(125,211,252,0.22) 20%, rgba(125,211,252,0.22) 80%, transparent); margin: 2.6rem 0; }
+  .section-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6f96c4; margin-bottom: 0.9rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(125,211,252,0.25), transparent); }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.3rem, 2.4vw + .6rem, 1.6rem); font-weight: 500; color: #f2f7fd; margin-bottom: 0.6rem; line-height: 1.32; }
+  .body-text { font-size: 14.5px; line-height: 1.75; color: #b9cee8; margin-bottom: 0.8rem; }
+  .body-text b { color: #f2f7fd; font-weight: 600; }
+
+  .glass { background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); border-radius: 14px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+  /* ---------- Ticker ---------- */
+  .partners-section { margin: 2rem 0 0.5rem; }
+  .partners-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6f96c4; text-align: center; margin-bottom: 1.1rem; }
+  .partners-wrap { overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent); }
+  .partners-track { display: flex; align-items: center; width: max-content; animation: scroll-partners 26s linear infinite; }
+  .partners-track:hover { animation-play-state: paused; }
+  .partner-item { font-size: 14.5px; font-weight: 600; color: #cfe0f4; letter-spacing: 0.05em; padding: 0 2rem; white-space: nowrap; transition: color .25s; }
+  .partner-item:hover { color: #7dd3fc; }
+  .partner-sep { color: #33507a; font-size: 10px; flex-shrink: 0; }
+  @keyframes scroll-partners { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ---------- Recognition strip ---------- */
+  .recog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 1.2rem 0; }
+  .recog-card { display: block; text-decoration: none; padding: 18px 18px 16px; border-radius: 14px; background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease; position: relative; overflow: hidden; }
+  .recog-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, #185FA5, #37c2b6); opacity: 0; transition: opacity .25s; }
+  .recog-card:hover { transform: translateY(-3px); border-color: rgba(125,211,252,0.4); box-shadow: 0 16px 36px rgba(2,10,24,0.5); background: rgba(17,42,84,0.55); }
+  .recog-card:hover::before { opacity: 1; }
+  .recog-org { font-size: 13.5px; font-weight: 700; color: #f2f7fd; letter-spacing: 0.03em; display: flex; align-items: center; gap: 8px; }
+  .recog-org .link-arrow { margin-left: auto; color: #7dd3fc; font-weight: 400; opacity: 0; transform: translateX(-4px); transition: opacity .25s, transform .25s; }
+  .recog-card:hover .link-arrow { opacity: 1; transform: none; }
+  .recog-desc { font-size: 12.5px; color: #9db9dc; line-height: 1.55; margin-top: 6px; }
+  .recog-kind { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #37c2b6; margin-bottom: 8px; }
+  @media (max-width: 620px) { .recog-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Steps ---------- */
+  .data-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+  .step { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 12px; background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); transition: border-color .25s, transform .25s, box-shadow .25s; }
+  .step:hover { border-color: rgba(125,211,252,0.38); transform: translateY(-1px); box-shadow: 0 10px 26px rgba(2,10,24,0.45); }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #185FA5, #37c2b6); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; line-height: 1.65; color: #b9cee8; }
+  .step-text b { font-weight: 600; color: #f2f7fd; }
+
+  /* ---------- Chips ---------- */
+  .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+  .chip { font-size: 12.5px; font-weight: 500; color: #cfe4f9; background: rgba(24,95,165,0.22); border: 1px solid rgba(125,211,252,0.25); padding: 6px 13px; border-radius: 20px; transition: background .25s, color .25s, transform .25s, border-color .25s; }
+  .chip:hover { background: #185FA5; border-color: #185FA5; color: #fff; transform: translateY(-1px); }
+
+  /* ---------- Problem / profile boxes ---------- */
+  .problem-box { padding: 18px 20px; border-left: 3px solid #37c2b6; border-radius: 0 10px 10px 0; background: rgba(13,33,69,0.5); margin: 1.1rem 0; }
+  .problem-box p { font-size: 14px; line-height: 1.7; color: #b9cee8; }
+  .stat-inline { font-weight: 600; color: #7dd3fc; }
+  .profile-box { padding: 22px 24px; border-radius: 14px; background: linear-gradient(160deg, rgba(24,95,165,0.24), rgba(13,33,69,0.5)); border: 1px solid rgba(125,211,252,0.22); margin-bottom: 12px; }
+  .profile-box p { font-size: 14px; line-height: 1.7; color: #cfe0f4; }
+  .profile-box b { font-weight: 600; color: #f2f7fd; }
+  .assist-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .assist-row { display: flex; gap: 10px; align-items: flex-start; }
+  .assist-check { color: #37c2b6; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .assist-text { font-size: 13.5px; color: #b9cee8; line-height: 1.55; }
+  .assist-text b { color: #f2f7fd; }
+  .profile-stat { display: inline-block; margin-top: 14px; font-size: 12.5px; font-weight: 600; background: linear-gradient(120deg, #185FA5, #2b9d92); color: #fff; padding: 7px 16px; border-radius: 20px; }
+
+  /* ---------- Benefits ---------- */
+  .benefits-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .benefit-row { display: flex; gap: 14px; align-items: flex-start; padding: 15px 17px; border-radius: 12px; background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); position: relative; overflow: hidden; transition: border-color .25s, box-shadow .25s; }
+  .benefit-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #185FA5, #37c2b6); transform: scaleY(0); transform-origin: top; transition: transform .3s ease; }
+  .benefit-row:hover { border-color: rgba(125,211,252,0.38); box-shadow: 0 10px 26px rgba(2,10,24,0.45); }
+  .benefit-row:hover::before { transform: scaleY(1); }
+  .benefit-dot { width: 8px; height: 8px; border-radius: 50%; background: #37c2b6; flex-shrink: 0; margin-top: 7px; box-shadow: 0 0 10px rgba(55,194,182,0.7); }
+  .benefit-title { font-size: 14px; font-weight: 600; color: #f2f7fd; margin-bottom: 4px; }
+  .benefit-desc { font-size: 13px; color: #9db9dc; line-height: 1.6; }
+
+  /* ---------- Ocean Bulletin mock ---------- */
+  .ob-mock { border-radius: 16px; overflow: hidden; border: 1px solid rgba(125,211,252,0.22); box-shadow: 0 24px 70px rgba(2,10,24,0.65); margin: 0.8rem 0 0.6rem; background: #0D2145; }
+  .ob-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #0D2145; border-bottom: 1px solid #1e3a5f; }
+  .ob-head img { height: 22px; }
+  .ob-head-title { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #cfe4f9; }
+  .ob-head-sub { font-size: 9.5px; color: #4A90D9; letter-spacing: 0.08em; }
+  .ob-head-pill { margin-left: auto; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; color: #7dd3fc; background: #1e3a5f; padding: 5px 12px; border-radius: 12px; white-space: nowrap; }
+  .ob-body { display: flex; position: relative; }
+  .ob-side { width: 118px; flex-shrink: 0; background: #0D2145; border-right: 1px solid #1e3a5f; padding: 12px 8px; display: flex; flex-direction: column; gap: 7px; }
+  .ob-pill { font-size: 10px; font-weight: 600; color: #7098C8; background: #13294d; border: 1px solid #1e3a5f; border-radius: 14px; padding: 7px 10px; white-space: nowrap; cursor: default; }
+  .ob-pill.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .ob-scale { margin-top: auto; font-size: 8.5px; color: #7098C8; display: flex; gap: 6px; align-items: stretch; padding-left: 2px; }
+  .ob-scale-bar { width: 8px; border-radius: 4px; background: linear-gradient(to bottom, #0b2a52, #2f6fae 40%, #9fd0ff 75%, #eef6ff); }
+  .ob-scale-ticks { display: flex; flex-direction: column; justify-content: space-between; padding: 1px 0; }
+  .ob-map { position: relative; flex: 1; min-height: 380px; background: #0b2a52; overflow: hidden; }
+  #flowCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #obOverlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .ob-timeline { display: flex; align-items: center; background: #0D2145; border-top: 1px solid #1e3a5f; padding: 8px 14px; gap: 14px; overflow: hidden; }
+  .ob-timeline .tl-chip { font-size: 9px; font-weight: 600; color: #7dd3fc; background: #1e3a5f; padding: 4px 10px; border-radius: 10px; white-space: nowrap; }
+  .tl-days { display: flex; flex: 1; justify-content: space-between; font-size: 8.5px; color: #7098C8; white-space: nowrap; gap: 8px; overflow: hidden; }
+  .tl-days span.now { color: #7dd3fc; font-weight: 700; }
+  /* voyage panel */
+  .ob-panel { position: absolute; bottom: 12px; right: 12px; width: 208px; background: rgba(246,250,254,0.97); border-radius: 12px; padding: 12px 14px; box-shadow: 0 12px 34px rgba(2,10,24,0.5); color: #0f2a4d; z-index: 3; }
+  .ob-panel-label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; color: #64748b; margin-bottom: 8px; }
+  .ob-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+  .ob-tab { flex: 1; font-size: 10px; font-weight: 600; padding: 5px 0; text-align: center; border-radius: 12px; border: 1px solid #c9d8ea; background: #fff; color: #3b5a80; cursor: pointer; font-family: inherit; transition: background .2s, color .2s; }
+  .ob-tab.active { background: #0f2a4d; color: #fff; border-color: #0f2a4d; }
+  .ob-stat { display: flex; justify-content: space-between; font-size: 10.5px; padding: 3.5px 0; border-bottom: 1px solid #e6edf5; }
+  .ob-stat:last-of-type { border-bottom: none; }
+  .ob-stat .k { color: #64748b; }
+  .ob-stat .v { font-weight: 700; color: #0f2a4d; font-variant-numeric: tabular-nums; }
+  .ob-calm { margin-top: 8px; background: #eef4fb; border: 1px solid #d7e4f2; border-radius: 8px; text-align: center; padding: 7px 4px 8px; }
+  .ob-calm .k { font-size: 9px; color: #64748b; font-weight: 600; }
+  .ob-calm .v { font-size: 17px; font-weight: 700; color: #0f2a4d; }
+  .ob-impact-scale { margin-top: 8px; }
+  .ob-impact-bar { height: 6px; border-radius: 3px; background: linear-gradient(to right, #e8a33d, #f4d58a, #e9f2e4, #8fd08a, #22c55e); }
+  .ob-impact-ticks { display: flex; justify-content: space-between; font-size: 8px; color: #64748b; margin-top: 3px; }
+  @media (max-width: 720px) {
+    .ob-side { display: none; }
+    .ob-panel { position: relative; bottom: auto; right: auto; width: auto; margin: 310px 10px 10px; }
+    .ob-map { min-height: 300px; }
+  }
+  .platform-caption { font-size: 12.5px; color: #8fabce; line-height: 1.6; margin: 10px 2px 0; font-style: italic; }
+
+  /* ---------- Compare Routes (light card) ---------- */
+  .compare-card { background: #f7fafd; border-radius: 16px; padding: 22px 22px 18px; color: #14304f; box-shadow: 0 24px 70px rgba(2,10,24,0.6); border: 1px solid rgba(255,255,255,0.5); margin: 0.8rem 0 0.6rem; }
+  .compare-title { font-size: 17px; font-weight: 700; color: #14304f; margin-bottom: 14px; }
+  .scenario-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 16px; flex-wrap: wrap; }
+  .scenario-field { flex: 1; min-width: 160px; }
+  .scenario-field .lbl { font-size: 10.5px; font-weight: 700; color: #3b5a80; margin-bottom: 5px; }
+  .scenario-select { display: flex; justify-content: space-between; align-items: center; border: 1px solid #cfdcea; background: #fff; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 600; color: #14304f; }
+  .scenario-select .chev { color: #7291b3; font-size: 11px; }
+  .scenario-swap { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #cfdcea; background: #fff; display: flex; align-items: center; justify-content: center; color: #185FA5; font-size: 15px; }
+  .compare-chart-head { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 6px; }
+  .compare-chart-head .t { font-size: 13.5px; font-weight: 700; }
+  .compare-legend { margin-left: auto; display: flex; gap: 14px; font-size: 11px; color: #3b5a80; }
+  .compare-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+  #compareChart { width: 100%; height: auto; display: block; }
+  .compare-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12.5px; }
+  .compare-table th { text-align: left; font-size: 11px; color: #3b5a80; font-weight: 700; padding: 8px 8px; border-bottom: 1px solid #dfe9f2; }
+  .compare-table td { padding: 8px 8px; border-bottom: 1px solid #ecf2f8; color: #14304f; font-variant-numeric: tabular-nums; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td.diff-good, .diff-good { color: #16a34a; font-weight: 700; }
+  .dot-direct { color: #4A90D9; } .dot-opt { color: #f59e0b; }
+
+  /* ---------- Polar widget ---------- */
+  .polar-card { background: #ffffff; border-radius: 16px; padding: 20px 20px 14px; color: #14304f; box-shadow: 0 24px 70px rgba(2,10,24,0.6); margin: 0.8rem 0 0.6rem; }
+  .polar-title { font-size: 14.5px; font-weight: 700; color: #14304f; text-align: center; margin-bottom: 12px; }
+  .polar-tabs-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; color: #94a3b8; text-align: center; margin: 8px 0 6px; }
+  .polar-tabs { display: flex; border: 1px solid #dbe6f0; border-radius: 12px; overflow: hidden; max-width: 380px; margin: 0 auto; }
+  .polar-tab { flex: 1; padding: 9px 0; font-size: 12.5px; font-weight: 600; color: #64748b; background: #f6f9fc; border: none; cursor: pointer; font-family: inherit; transition: background .2s, color .2s; }
+  .polar-tab + .polar-tab { border-left: 1px solid #dbe6f0; }
+  .polar-tab.active { background: #5b9bd5; color: #fff; }
+  .polar-stage { position: relative; max-width: 520px; margin: 14px auto 0; }
+  #polarCanvas, #polarHover { width: 100%; height: auto; display: block; }
+  #polarHover { position: absolute; inset: 0; }
+  .polar-tip { position: absolute; pointer-events: none; background: rgba(255,255,255,0.96); border: 1px solid #dbe6f0; border-radius: 10px; box-shadow: 0 8px 22px rgba(20,48,79,0.18); padding: 8px 12px; font-size: 12px; color: #14304f; opacity: 0; transition: opacity .15s; white-space: nowrap; z-index: 4; }
+  .polar-tip.show { opacity: 1; }
+  .polar-tip .row1 { color: #3b5a80; }
+  .polar-tip .val { font-weight: 700; font-size: 13px; }
+  .polar-tip .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .polar-foot { text-align: center; font-size: 10.5px; color: #94a3b8; border-top: 1px solid #eef3f8; margin-top: 10px; padding-top: 9px; }
+
+  /* ---------- Case cards ---------- */
+  .case-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 1rem; }
+  .case-card { padding: 20px 22px; border-radius: 14px; background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); transition: transform .2s ease, border-color .25s, box-shadow .25s; transform-style: preserve-3d; will-change: transform; }
+  .case-card:hover { border-color: rgba(125,211,252,0.4); box-shadow: 0 18px 44px rgba(2,10,24,0.55); }
+  .case-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .case-badge { font-size: 10.5px; font-weight: 600; background: rgba(34,197,94,0.16); color: #6ee7a0; border: 1px solid rgba(34,197,94,0.3); padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .case-badge.neutral { background: rgba(24,95,165,0.25); color: #7dd3fc; border-color: rgba(125,211,252,0.3); }
+  .case-title { font-size: 14.5px; font-weight: 600; color: #f2f7fd; line-height: 1.35; }
+  .case-route { font-size: 12px; color: #6f96c4; margin-top: 2px; }
+  .case-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .case-stat { font-size: 12px; font-weight: 600; background: rgba(24,95,165,0.2); color: #7dd3fc; padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(125,211,252,0.16); }
+  .case-desc { font-size: 13px; color: #9db9dc; line-height: 1.65; margin-top: 8px; }
+  .case-desc b { color: #f2f7fd; }
+  .case-source { font-size: 11px; color: #5d7ea8; margin-top: 8px; }
+
+  /* ---------- Calculator ---------- */
+  .calc-shell { border-radius: 14px; overflow: hidden; border: 1px solid rgba(125,211,252,0.2); margin-bottom: 1rem; box-shadow: 0 18px 50px rgba(2,10,24,0.5); }
+  .calc-header { background: linear-gradient(120deg, #0D2145, #14345f); padding: 13px 20px; }
+  .calc-header-label { font-size: 12px; font-weight: 600; color: #fff; letter-spacing: 0.08em; text-transform: uppercase; }
+  .calc-box { padding: 20px; background: rgba(13,33,69,0.55); backdrop-filter: blur(8px); }
+  .calc-box > label, .calc-box > .calc-lbl { font-size: 12.5px; font-weight: 600; color: #9db9dc; display: block; margin-bottom: 7px; }
+  .fuel-tabs { display: flex; gap: 6px; margin-bottom: 15px; }
+  .fuel-tab { flex: 1; padding: 8px; border: 1px solid rgba(125,211,252,0.25); border-radius: 9px; background: rgba(9,26,51,0.5); font-size: 12px; font-weight: 600; color: #9db9dc; text-align: center; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+  .fuel-tab.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .calc-row { display: flex; gap: 10px; margin-bottom: 15px; }
+  .calc-field { flex: 1; }
+  .calc-field label { font-size: 11.5px; color: #9db9dc; font-weight: 600; display: block; margin-bottom: 5px; }
+  .calc-input { width: 100%; padding: 9px 11px; border: 1px solid rgba(125,211,252,0.25); border-radius: 9px; background: rgba(9,26,51,0.6); font-size: 13.5px; color: #f2f7fd; font-family: 'DM Sans', sans-serif; }
+  .calc-input:focus { outline: none; border-color: #7dd3fc; }
+  .ets-row { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+  .ets-row label { font-size: 12px; color: #9db9dc; font-weight: 500; cursor: pointer; }
+  .ets-row input { accent-color: #185FA5; }
+  .calc-result { background: rgba(9,26,51,0.65); border: 1px solid rgba(125,211,252,0.2); border-radius: 10px; padding: 14px 16px; }
+  .calc-result-base { font-size: 12px; color: #8fabce; margin-bottom: 10px; }
+  .calc-result-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(125,211,252,0.12); gap: 12px; }
+  .calc-result-row:last-child { border-bottom: none; }
+  .calc-result-label { font-size: 12.5px; color: #9db9dc; }
+  .calc-result-value { font-size: 14.5px; font-weight: 700; color: #37e2c4; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .calc-note { font-size: 11px; color: #5d7ea8; margin-top: 12px; line-height: 1.55; }
+
+  /* ---------- OB CTA block ---------- */
+  .ob-cta { background: linear-gradient(150deg, #081832, #0A1E3D 55%, #0f3560); border-radius: 16px; padding: 34px 26px; margin: 1.6rem 0; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(125,211,252,0.16); }
+  .ob-cta::before { content: ''; position: absolute; left: 50%; top: -70px; width: 380px; height: 240px; transform: translateX(-50%); background: radial-gradient(ellipse, rgba(91,155,213,0.28), transparent 70%); }
+  .ob-cta-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #7098C8; margin-bottom: 0.8rem; position: relative; }
+  .ob-cta-title { font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 500; color: #fff; margin-bottom: 0.75rem; line-height: 1.3; position: relative; }
+  .ob-cta-text { font-size: 14px; color: #94B8D8; line-height: 1.65; margin-bottom: 1.5rem; position: relative; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .ob-cta-btn { display: inline-block; padding: 14px 32px; border-radius: 12px; background: #22C55E; color: #fff; font-size: 15.5px; font-weight: 600; text-decoration: none; position: relative; transition: background .25s, transform .25s, box-shadow .25s; box-shadow: 0 12px 34px rgba(34,197,94,0.35); }
+  .ob-cta-btn:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 18px 44px rgba(34,197,94,0.45); }
+  .ob-cta-sub { font-size: 12px; color: #6f96c4; margin-top: 13px; position: relative; }
+
+  /* ---------- FAQ ---------- */
+  .faq-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 1rem; }
+  .faq-item { border: 1px solid rgba(125,211,252,0.14); border-radius: 12px; background: rgba(13,33,69,0.44); overflow: hidden; transition: border-color .25s; }
+  .faq-item.open { border-color: rgba(125,211,252,0.4); }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 15px 17px; cursor: pointer; font-size: 14px; font-weight: 500; color: #f2f7fd; gap: 12px; background: none; border: none; width: 100%; text-align: left; font-family: inherit; }
+  .faq-toggle { width: 21px; height: 21px; border-radius: 50%; background: rgba(24,95,165,0.35); color: #7dd3fc; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform .3s cubic-bezier(.22,1,.36,1), background .25s, color .25s; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); background: #185FA5; color: #fff; }
+  .faq-a { padding: 0 17px; max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(.22,1,.36,1), padding 0.3s ease; }
+  .faq-item.open .faq-a { max-height: 340px; padding: 0 17px 15px; }
+  .faq-a p { font-size: 13px; color: #9db9dc; line-height: 1.7; }
+
+  /* ---------- White paper + trial ---------- */
+  .wp-box { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 12px; background: rgba(13,33,69,0.44); border: 1px solid rgba(125,211,252,0.14); margin-bottom: 1.5rem; text-decoration: none; transition: border-color .25s, transform .25s, box-shadow .25s; }
+  .wp-box:hover { border-color: rgba(125,211,252,0.4); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(2,10,24,0.5); }
+  .wp-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(24,95,165,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .wp-title { font-size: 14px; font-weight: 600; color: #f2f7fd; margin-bottom: 2px; }
+  .wp-text { font-size: 12.5px; color: #9db9dc; }
+  .trial-box { padding: 20px 22px; border-radius: 14px; background: linear-gradient(160deg, rgba(24,95,165,0.22), rgba(13,33,69,0.5)); border: 1px solid rgba(125,211,252,0.22); margin-top: 1.5rem; }
+  .trial-box-title { font-size: 14px; font-weight: 600; color: #f2f7fd; margin-bottom: 6px; }
+  .trial-box-desc { font-size: 13px; color: #9db9dc; line-height: 1.65; }
+  .trial-box-desc a { color: #7dd3fc; font-weight: 600; text-decoration: none; }
+  .trial-box-desc a:hover { text-decoration: underline; }
+
+  /* ---------- Final CTA / footer ---------- */
+  .cta-primary { display: block; width: 100%; padding: 15px; border-radius: 12px; background: linear-gradient(120deg, #185FA5, #1b6cb8); color: #fff; font-size: 15px; font-weight: 600; text-align: center; text-decoration: none; margin-bottom: 10px; border: none; font-family: 'DM Sans', sans-serif; cursor: pointer; position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+  .cta-primary::after { content: ''; position: absolute; top: 0; left: -70%; width: 40%; height: 100%; background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent); transform: skewX(-20deg); transition: left .6s ease; }
+  .cta-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 34px rgba(24,95,165,0.45); }
+  .cta-primary:hover::after { left: 130%; }
+  .cal-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .cal-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 13px; border-radius: 12px; border: 1px solid rgba(125,211,252,0.25); background: rgba(13,33,69,0.44); color: #cfe4f9; font-size: 13px; text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: border-color .25s, background .25s, transform .25s; }
+  .cal-btn:hover { background: rgba(24,95,165,0.3); border-color: rgba(125,211,252,0.4); transform: translateY(-1px); }
+  .cal-icon { font-size: 16px; }
+  .contact-line { font-size: 14px; color: #b9cee8; margin-top: 0.6rem; }
+  .contact-line strong { color: #f2f7fd; }
+  .contact-line a { color: #7dd3fc; text-decoration: none; }
+  .contact-line a:hover { text-decoration: underline; }
+  footer { border-top: 1px solid rgba(125,211,252,0.14); margin-top: 2.4rem; padding-top: 1.5rem; display: flex; align-items: center; gap: 12px; }
+  footer img { height: 28px; }
+  .foot-name { font-size: 14px; font-weight: 600; color: #f2f7fd; }
+  .foot-sub { font-size: 12px; color: #6f96c4; }
+
+  @media (max-width: 520px) {
+    .calc-row { flex-direction: column; }
+    .cal-row { flex-direction: column; }
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+    html.js .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
+  <div>
+    <div class="nav-name">Amphitrite</div>
+    <div class="nav-sub">Ocean Data Intelligence</div>
+  </div>
+  <div class="nav-links">
+    <a href="#platform">Platform</a>
+    <a href="#data">Data</a>
+    <a href="#results">Results</a>
+    <a href="#calculator">Savings</a>
+    <a href="#faq">FAQ</a>
+    <a class="nav-cta" href="https://cal.com/noah-amphitrite/meeting" target="_blank" rel="noopener">Book a working session</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <canvas id="ocean3d" aria-hidden="true"></canvas>
+  <div class="hero-fallback" aria-hidden="true"></div>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Shipping &amp; Offshore Operations</div>
+    <h1 class="hero-title">High-resolution ocean intelligence for <em>maritime operations</em>.</h1>
+    <p class="hero-sub">Wind, waves, and ocean currents at 3.0 km resolution — hourly updates, 14-day forecast horizon. One integrated operational picture for routing, offshore workability, and passage planning.</p>
+    <div class="hero-ctas">
+      <a href="https://cal.com/noah-amphitrite/meeting" class="btn-solid" target="_blank" rel="noopener">Book a working session</a>
+      <a href="https://bulletin.amphitrite.fr/" class="btn-ghost" target="_blank" rel="noopener">Plan a route now →</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Dive in</div>
+</header>
+
+<div class="page">
+
+  <!-- Trusted by -->
+  <div class="partners-section reveal">
+    <div class="partners-label">Trusted by</div>
+    <div class="partners-wrap">
+      <div class="partners-track">
+        <span class="partner-item">CMA CGM</span><span class="partner-sep">●</span>
+        <span class="partner-item">Boskalis</span><span class="partner-sep">●</span>
+        <span class="partner-item">Heerema</span><span class="partner-sep">●</span>
+        <span class="partner-item">Louis Dreyfus Armateurs</span><span class="partner-sep">●</span>
+        <span class="partner-item">NATO</span><span class="partner-sep">●</span>
+        <span class="partner-item">Orange Marine</span><span class="partner-sep">●</span>
+        <span class="partner-item">ESA</span><span class="partner-sep">●</span>
+        <span class="partner-item">Van Oord</span><span class="partner-sep">●</span>
+        <span class="partner-item">CMA CGM</span><span class="partner-sep">●</span>
+        <span class="partner-item">Boskalis</span><span class="partner-sep">●</span>
+        <span class="partner-item">Heerema</span><span class="partner-sep">●</span>
+        <span class="partner-item">Louis Dreyfus Armateurs</span><span class="partner-sep">●</span>
+        <span class="partner-item">NATO</span><span class="partner-sep">●</span>
+        <span class="partner-item">Orange Marine</span><span class="partner-sep">●</span>
+        <span class="partner-item">ESA</span><span class="partner-sep">●</span>
+        <span class="partner-item">Van Oord</span><span class="partner-sep">●</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Recognition -->
+  <div class="reveal">
+    <div class="section-label">Recognition</div>
+    <h2 class="section-title">Selected, featured, and awarded — across defence and commercial maritime.</h2>
+  </div>
+  <div class="recog-grid">
+    <a class="recog-card reveal" href="https://www.diana.nato.int/" target="_blank" rel="noopener">
+      <span class="recog-kind">Defence innovation</span>
+      <div class="recog-org">NATO DIANA <span class="link-arrow">→</span></div>
+      <div class="recog-desc">Selected into the NATO DIANA 2026 Challenge Programme cohort — one of 150 chosen from ~3,600 applicants.</div>
+    </a>
+    <a class="recog-card reveal" style="--d:.07s" href="https://defence-industry-space.ec.europa.eu/eu-defence-industry/eu-defence-innovation-scheme-eudis_en" target="_blank" rel="noopener">
+      <span class="recog-kind">EU defence innovation</span>
+      <div class="recog-org">EUDIS <span class="link-arrow">→</span></div>
+      <div class="recog-desc">Recently joined EUDIS, the EU's Defence Innovation Scheme.</div>
+    </a>
+    <a class="recog-card reveal" style="--d:.14s" href="https://blogs.nvidia.com/blog/amphitrite-ocean-simulation-prediction/" target="_blank" rel="noopener">
+      <span class="recog-kind">Featured by</span>
+      <div class="recog-org">NVIDIA <span class="link-arrow">→</span></div>
+      <div class="recog-desc">Featured by NVIDIA for our AI ocean simulation and forecasting work.</div>
+    </a>
+    <a class="recog-card reveal" style="--d:.21s" href="https://breakbulkeuropeawards.com/winners-2026/" target="_blank" rel="noopener">
+      <span class="recog-kind">Award</span>
+      <div class="recog-org">Breakbulk Europe Award 2026 <span class="link-arrow">→</span></div>
+      <div class="recog-desc">Breakbulk's innovation award for maritime technology — for the routing work alongside our impact on fuel savings and decarbonisation.</div>
+    </a>
+    <a class="recog-card reveal" style="--d:.28s" href="https://business.esa.int/projects/ocean-bulletin-gdsc" target="_blank" rel="noopener">
+      <span class="recog-kind">Space programme</span>
+      <div class="recog-org">ESA <span class="link-arrow">→</span></div>
+      <div class="recog-desc">ESA-backed Ocean Bulletin / Green Digital Shipping Corridor project.</div>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- What it is -->
+  <div class="reveal" id="data">
+    <div class="section-label">What it is</div>
+    <h2 class="section-title">The Ocean Bulletin — maritime intelligence platform.</h2>
+    <p class="body-text">Amphitrite is a maritime weather intelligence platform combining high-resolution ocean currents, waves, and wind into one operational picture. Available as a browser-based platform (Ocean Bulletin) or as a data API for integration into your systems.</p>
+  </div>
+  <div class="data-steps">
+    <div class="step reveal"><div class="step-num">1</div><div class="step-text"><b>3.0 km resolution</b> — hourly wind, wave, and ocean current data at a horizontal scale that resolves coastal eddies, tidal jets, and current boundaries that standard models miss entirely.</div></div>
+    <div class="step reveal" style="--d:.07s"><div class="step-num">2</div><div class="step-text"><b>HIRES-CURRENTS</b> — Amphitrite's proprietary deep-learning AI current model, developed with CNRS and École Polytechnique. Trained on 165,000+ independent in-situ buoy measurements. 14-day forecast horizon, global coverage.</div></div>
+    <div class="step reveal" style="--d:.14s"><div class="step-num">3</div><div class="step-text"><b>Platform or API</b> — plan routes interactively in Ocean Bulletin, or pull structured data directly into your voyage management system, ETA tools, or operational dashboards via the MetOcean API.</div></div>
+    <div class="step reveal" style="--d:.21s"><div class="step-num">4</div><div class="step-text"><b>Hindcast, reanalysis, and forecast</b> — historical data back years for post-voyage analysis and route learning; real-time and forecast data for operational planning. One unified data source.</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Who uses it -->
+  <div class="reveal">
+    <div class="section-label">Who uses it</div>
+    <h2 class="section-title">Across commercial shipping and offshore.</h2>
+  </div>
+  <div class="chips-wrap reveal">
+    <span class="chip">Container operators</span>
+    <span class="chip">Bulk carriers</span>
+    <span class="chip">Ro-Ro &amp; ferries</span>
+    <span class="chip">Tankers</span>
+    <span class="chip">DSV / OSV operators</span>
+    <span class="chip">Subsea &amp; cable lay</span>
+    <span class="chip">Offshore wind installation</span>
+    <span class="chip">Tug &amp; barge operations</span>
+    <span class="chip">Rig moves &amp; tow planning</span>
+    <span class="chip">Marine survey</span>
+    <span class="chip">Port &amp; harbour operations</span>
+    <span class="chip">Superyachts (60m+)</span>
+    <span class="chip">Expedition yachts</span>
+    <span class="chip">Research &amp; scientific vessels</span>
+    <span class="chip">Navy &amp; defence (NATO)</span>
+    <span class="chip">Project cargo &amp; heavy lifts</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Data gap -->
+  <div class="reveal">
+    <div class="section-label">The data gap</div>
+    <h2 class="section-title">Wind and wave forecasting is mature. Ocean current forecasting hasn't reached the same standard — until now.</h2>
+    <p class="body-text">Wind forecasting has achieved near-operational accuracy at 1/4° resolution globally. Wave models follow directly from wind. But ocean surface currents are a fundamentally different problem: eddies are an order of magnitude smaller than atmospheric storms, and there are far fewer ocean measurements than atmospheric ones.</p>
+    <div class="problem-box">
+      <p><span class="stat-inline">70% of ship captains rate ocean current forecasts as average or poor</span> — compared to just 4% for wind. That gap is what Amphitrite closes. (Source: captain survey, Amphitrite white paper, April 2026.)</p>
+    </div>
+    <p class="body-text">Standard operational models (EU Copernicus, US NOAA) often disagree significantly on surface currents — predicting different locations and intensities for the same current vein on the same day. Misplacing a current vein by 30–50 nautical miles changes the routing decision entirely.</p>
+  </div>
+  <div class="profile-box reveal">
+    <p><b>HIRES-CURRENTS accuracy vs EU &amp; US operational models</b> — validated against 165,000+ independent in-situ measurements across North Atlantic and South Africa:</p>
+    <div class="assist-list">
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b><span data-count="37">37</span>% of forecasts excellent</b> (direction error &lt;15°) vs 23% for EU and US operational models</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b><span data-count="8">8</span>% of forecasts wrong</b> (direction error &gt;90°) vs 24% for EU and 21% for US models</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text"><b><span data-count="76">76</span>% of forecasts good or excellent</b> (within 45°) vs 52% for EU operational models</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Ocean Bulletin platform mock -->
+  <div class="reveal" id="platform">
+    <div class="section-label">Ocean Bulletin platform</div>
+    <h2 class="section-title">Two routes. One informed by 3.0 km ocean current data.</h2>
+  </div>
+
+  <div class="ob-mock reveal">
+    <div class="ob-head">
+      <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="">
+      <div>
+        <div class="ob-head-title">THE OCEAN BULLETIN</div>
+        <div class="ob-head-sub">Powered by AMPHITRITE</div>
+      </div>
+      <div class="ob-head-pill">14-DAY FORECAST</div>
+    </div>
+    <div class="ob-body">
+      <div class="ob-side">
+        <div class="ob-pill active">◉ Currents</div>
+        <div class="ob-pill">≋ Wind</div>
+        <div class="ob-pill">∿ Waves</div>
+        <div class="ob-pill">🌀 Hurricanes</div>
+        <div class="ob-pill">≡ More</div>
+        <div class="ob-pill">🗎 Meteo Bulletin</div>
+        <div class="ob-scale">
+          <div class="ob-scale-bar"></div>
+          <div class="ob-scale-ticks"><span>kn</span><span>2.0+</span><span>1.0</span><span>0</span></div>
+        </div>
+      </div>
+      <div class="ob-map" role="img" aria-label="Ocean Bulletin platform view: animated 3.0 km current field with a direct route and the Amphitrite-optimised route coloured by current impact">
+        <canvas id="flowCanvas" aria-hidden="true"></canvas>
+        <svg id="obOverlay" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+          <!-- graticule -->
+          <g stroke="rgba(210,228,248,0.16)" stroke-width="1">
+            <line x1="125" y1="0" x2="125" y2="620"/><line x1="250" y1="0" x2="250" y2="620"/><line x1="375" y1="0" x2="375" y2="620"/><line x1="500" y1="0" x2="500" y2="620"/><line x1="625" y1="0" x2="625" y2="620"/><line x1="750" y1="0" x2="750" y2="620"/><line x1="875" y1="0" x2="875" y2="620"/>
+            <line x1="0" y1="120" x2="1000" y2="120"/><line x1="0" y1="240" x2="1000" y2="240"/><line x1="0" y1="360" x2="1000" y2="360"/><line x1="0" y1="480" x2="1000" y2="480"/>
+          </g>
+          <!-- land -->
+          <g fill="#eef3f8" stroke="#b9c8d9" stroke-width="1.5">
+            <!-- North America -->
+            <path d="M-20,-20 L235,-20 Q258,26 212,52 Q170,72 150,64 Q120,58 96,84 Q116,108 92,132 Q64,150 84,178 L60,214 Q38,252 66,286 L44,330 Q28,372 62,404 L46,452 Q72,492 52,530 Q84,556 66,592 L84,640 L-20,640 Z"/>
+            <!-- Florida -->
+            <path d="M60,530 Q92,540 104,574 Q108,600 96,622 Q84,600 74,580 Q60,556 52,542 Z"/>
+            <!-- Newfoundland -->
+            <path d="M196,84 Q226,74 244,92 Q252,112 232,124 Q206,130 192,114 Q186,96 196,84 Z"/>
+            <!-- Greenland tip -->
+            <path d="M330,-20 Q368,-6 380,14 Q384,34 362,38 Q338,36 326,16 Q320,-4 306,-20 Z"/>
+            <!-- Iceland -->
+            <path d="M568,20 Q596,12 610,28 Q612,44 592,50 Q568,50 560,36 Q560,26 568,20 Z"/>
+            <!-- UK + Ireland -->
+            <path d="M772,28 Q794,50 786,84 Q778,116 792,142 Q776,152 762,132 Q752,100 758,68 Q762,42 772,28 Z"/>
+            <path d="M722,80 Q742,76 748,96 Q746,116 726,118 Q710,110 712,94 Q714,84 722,80 Z"/>
+            <!-- France / Biscay -->
+            <path d="M1020,60 L850,84 Q822,102 838,128 Q860,148 846,168 Q878,196 920,198 L1020,206 Z"/>
+            <!-- Iberia -->
+            <path d="M1020,224 L906,232 Q856,244 846,278 Q852,312 890,324 Q940,332 1020,326 Z"/>
+            <!-- North Africa -->
+            <path d="M1020,352 L888,364 Q836,380 848,420 Q824,456 844,494 Q820,540 842,584 L830,640 L1020,640 Z"/>
+            <!-- Islands -->
+            <circle cx="560" cy="298" r="3"/><circle cx="576" cy="292" r="2.4"/><circle cx="546" cy="306" r="2"/>
+            <circle cx="806" cy="452" r="3"/><circle cx="820" cy="460" r="2.4"/><circle cx="792" cy="460" r="2"/>
+            <circle cx="300" cy="428" r="2.6"/>
+            <path d="M160,562 Q188,554 208,562 Q192,572 172,572 Z"/>
+            <path d="M232,574 Q252,568 266,576 Q252,584 238,582 Z"/>
+          </g>
+          <!-- direct route (dashed blue) -->
+          <path id="routeDirect" d="M250,470 L812,192" fill="none" stroke="#4A90D9" stroke-width="2.4" stroke-dasharray="9,6" opacity="0.85"/>
+          <!-- optimised route (impact dots drawn by JS into this group) -->
+          <path id="routeOpt" d="M250,470 C340,398 430,300 560,244 C660,198 740,192 812,192" fill="none" stroke="rgba(34,197,94,0.4)" stroke-width="2"/>
+          <g id="routeDots"></g>
+          <!-- endpoints -->
+          <circle cx="250" cy="470" r="6" fill="#4A90D9" stroke="#eef6ff" stroke-width="1.6"/>
+          <text x="262" y="486" font-family="DM Sans, sans-serif" font-size="12" fill="#cfe4f9">Departure</text>
+          <circle cx="812" cy="192" r="6" fill="#22C55E" stroke="#eaffee" stroke-width="1.6"/>
+          <text x="752" y="178" font-family="DM Sans, sans-serif" font-size="12" fill="#a7f3c4">Arrival</text>
+          <!-- route labels -->
+          <rect x="386" y="330" width="104" height="21" rx="10" fill="#12335e" opacity="0.92"/>
+          <text x="438" y="345" font-family="DM Sans, sans-serif" font-size="11" fill="#7dd3fc" text-anchor="middle">Voyage plan</text>
+          <rect x="420" y="196" width="152" height="21" rx="10" fill="#0f4429" opacity="0.94"/>
+          <text x="496" y="211" font-family="DM Sans, sans-serif" font-size="11" fill="#86efac" text-anchor="middle">Amphitrite optimised</text>
+          <!-- forecast info card -->
+          <rect x="16" y="16" width="238" height="58" rx="8" fill="rgba(246,250,254,0.96)"/>
+          <text x="30" y="36" font-family="DM Sans, sans-serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#14304f">CURRENTS FORECAST</text>
+          <text x="30" y="52" font-family="DM Sans, sans-serif" font-size="10" fill="#3b5a80">UPDATED: 08 JUL 2026 08:34 UTC</text>
+          <text x="30" y="66" font-family="DM Sans, sans-serif" font-size="10" fill="#3b5a80">SOURCE: AMPHITRITE</text>
+          <!-- coords box -->
+          <rect x="300" y="556" width="132" height="40" rx="8" fill="rgba(246,250,254,0.95)"/>
+          <text x="366" y="573" font-family="ui-monospace, monospace" font-size="11" fill="#14304f" text-anchor="middle">30°00' N</text>
+          <text x="366" y="588" font-family="ui-monospace, monospace" font-size="11" fill="#14304f" text-anchor="middle">016°10' W</text>
+        </svg>
+        <!-- voyage panel -->
+        <div class="ob-panel">
+          <div class="ob-panel-label">VOYAGES</div>
+          <div class="ob-tabs">
+            <button type="button" class="ob-tab" data-voy="direct">Direct</button>
+            <button type="button" class="ob-tab active" data-voy="opt">Optimized</button>
+          </div>
+          <div class="ob-stat"><span class="k">Distance</span><span class="v" id="voyDist">2824.9 nm</span></div>
+          <div class="ob-stat"><span class="k">Time</span><span class="v" id="voyTime">252 h</span></div>
+          <div class="ob-stat"><span class="k">STW</span><span class="v" id="voySTW">10.7 kn</span></div>
+          <div class="ob-stat"><span class="k">SOG</span><span class="v" id="voySOG">11.2 kn</span></div>
+          <div class="ob-calm"><div class="k">Calm STW</div><div class="v">12.0 kn</div></div>
+          <div class="ob-impact-scale">
+            <div class="ob-impact-bar"></div>
+            <div class="ob-impact-ticks"><span>-2.0 kn</span><span>0.0</span><span>+2.0 kn</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ob-timeline">
+      <span class="tl-chip">Max Forecast</span>
+      <div class="tl-days"><span class="now">Wed 07/08</span><span>Thu 07/09</span><span>Fri 07/10</span><span>Sat 07/11</span><span>Sun 07/12</span><span>Mon 07/13</span><span>Tue 07/14</span><span>Wed 07/15</span><span>Thu 07/16</span><span>Fri 07/17</span><span>Sat 07/18</span></div>
+    </div>
+  </div>
+  <p class="platform-caption reveal">Pensacola (US) → Stavanger (Norway), May–June 2025. 160m pipelay vessel. Amphitrite-optimised route surfed the Gulf Stream for 3 days: +2.7 kn without additional fuel. Source: Amphitrite white paper, April 2026 (AIS-validated).</p>
+
+  <!-- Compare Routes -->
+  <div class="compare-card reveal">
+    <div class="compare-title">Compare Routes</div>
+    <div class="scenario-row">
+      <div class="scenario-field">
+        <div class="lbl">Scenario A</div>
+        <div class="scenario-select"><span><span class="dot-direct">●</span> Direct</span><span class="chev">▼</span></div>
+      </div>
+      <div class="scenario-swap">⇄</div>
+      <div class="scenario-field">
+        <div class="lbl">Scenario B</div>
+        <div class="scenario-select"><span><span class="dot-opt">●</span> Amphitrite optimised</span><span class="chev">▼</span></div>
+      </div>
+    </div>
+    <div class="compare-chart-head">
+      <span class="t">Voyage Analysis — SOG (Speed Over Ground)</span>
+      <div class="compare-legend"><span><i style="background:#4A90D9"></i>Direct</span><span><i style="background:#f59e0b"></i>Optimised</span></div>
+    </div>
+    <svg id="compareChart" viewBox="0 0 920 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Speed over ground comparison between direct and optimised route"></svg>
+    <table class="compare-table">
+      <tr><th>Metric</th><th><span class="dot-direct">●</span> Direct</th><th><span class="dot-opt">●</span> Optimised</th><th>Diff</th></tr>
+      <tr><td>Distance</td><td>2841.3 nm</td><td>2824.9 nm</td><td class="diff-good">-16.4 nm</td></tr>
+      <tr><td>Duration</td><td>267.6 hrs</td><td>252.0 hrs</td><td class="diff-good">-15.5 h</td></tr>
+      <tr><td>Avg Speed (SOG)</td><td>10.6 kn</td><td>11.2 kn</td><td class="diff-good">+0.6 kn</td></tr>
+      <tr><td>Avg Speed (STW)</td><td>10.6 kn</td><td>10.7 kn</td><td>–</td></tr>
+      <tr><td>Departure</td><td>08/07 12:02</td><td>08/07 12:02</td><td>–</td></tr>
+      <tr><td>Arrival</td><td>19/07 15:36</td><td>19/07 00:04</td><td class="diff-good">15.5 h earlier</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Use cases -->
+  <div class="reveal">
+    <div class="section-label">Operational use cases</div>
+    <h2 class="section-title">Where it fits into maritime operations.</h2>
+  </div>
+  <div class="benefits-list">
+    <div class="benefit-row reveal"><div class="benefit-dot"></div><div><div class="benefit-title">Route optimisation — all three variables</div><div class="benefit-desc">Optimise passage plans against wind, waves, and ocean currents at 3.0 km. Plan routes that exploit favourable currents, avoid counter-currents, and select weather windows — all in one platform.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.05s"><div class="benefit-dot"></div><div><div class="benefit-title">Offshore workability windows</div><div class="benefit-desc">DSV, crane vessel, and construction vessel ops depend on wave height, period, and current speed. Get accurate go/no-go decisions days in advance — not just wind-based estimates.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.1s"><div class="benefit-dot"></div><div><div class="benefit-title">DP-sensitive operations</div><div class="benefit-desc">Accurate ocean current data at the operational site reduces thruster demand, improves DP station-keeping, and extends operational weather windows — particularly in areas with strong tidal or eddy currents.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.15s"><div class="benefit-dot"></div><div><div class="benefit-title">Tow and rig move planning</div><div class="benefit-desc">Tug-and-tow operations are highly sensitive to current forces across the towline. Forecast currents at 3.0 km along the entire route, not just at waypoints — critical for loaded semi-sub and jacket tows.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.2s"><div class="benefit-dot"></div><div><div class="benefit-title">Port approach and coastal passages</div><div class="benefit-desc">High-resolution tidal and coastal current data for approaches to Gibraltar, the English Channel, and major chokepoints — where standard models degrade to unusable resolution.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.25s"><div class="benefit-dot"></div><div><div class="benefit-title">Heavy cargo and project shipping</div><div class="benefit-desc">Combined current, wave, and wind forecast for scheduling departure windows, planning sailing angles, and reducing exposure to adverse conditions on high-value, low-margin transits.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.3s"><div class="benefit-dot"></div><div><div class="benefit-title">Fuel and emissions management</div><div class="benefit-desc">Current-informed routing reduces fuel consumption directly — both by exploiting favourable currents and avoiding headwinds created by counter-current conditions. Validated fuel savings from AIS data on real voyages.</div></div></div>
+    <div class="benefit-row reveal" style="--d:.35s"><div class="benefit-dot"></div><div><div class="benefit-title">Voyage risk reduction and ETA accuracy</div><div class="benefit-desc">14-day forecast at 3.0 km improves ETA confidence, reduces unexpected delays, and gives fleet managers a consistent, accurate picture across the fleet — not dependent on individual ship's officer judgment.</div></div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Technology -->
+  <div class="reveal">
+    <div class="section-label">How the data is built</div>
+    <h2 class="section-title">From satellite to operational forecast in one pipeline.</h2>
+  </div>
+  <div class="data-steps">
+    <div class="step reveal"><div class="step-num">1</div><div class="step-text"><b>Observation ingestion</b> — satellite altimetry (SWOT + nadir), SST from infrared satellites, chlorophyll, 165,000+ in-situ drifter and buoy measurements across North Atlantic and South Africa.</div></div>
+    <div class="step reveal" style="--d:.07s"><div class="step-num">2</div><div class="step-text"><b>HIRES-CURRENTS — proprietary deep-learning AI</b> — trained end-to-end on observational data. Resolves mesoscale eddies, current veins, and tidal signatures that numerical ocean models miss. 3.0 km horizontal resolution. (Garcia et al., AIES 2025; Kugusheva et al., Remote Sens. 2024.)</div></div>
+    <div class="step reveal" style="--d:.14s"><div class="step-num">3</div><div class="step-text"><b>Wind and wave integration</b> — ECMWF IFS (1/4°, hourly) for wind; ECMWF WAM and ERA5 for wave; regional tidal models (FES2014 global; AMM15 for English Channel; Puertos del Estado for Gibraltar). All variables at common resolution.</div></div>
+    <div class="step reveal" style="--d:.21s"><div class="step-num">4</div><div class="step-text"><b>14-day forecast output</b> — wind, waves, and ocean currents at 3.0 km resolution, updated hourly. Available via Ocean Bulletin platform or MetOcean API in multiple formats compatible with major navigation and VMS systems.</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Vessel model + interactive polar -->
+  <div class="reveal">
+    <div class="section-label">Custom vessel model</div>
+    <h2 class="section-title">Where accuracy becomes personal to your vessel.</h2>
+  </div>
+  <div class="profile-box reveal" style="margin-bottom:16px;">
+    <p><b>Generic vessel type assumptions introduce systematic routing error.</b> A custom vessel model removes that error by learning how your specific vessel responds to every combination of wind angle, wave direction, and current — using your actual voyage history.</p>
+    <div class="assist-list" style="margin-top:14px;">
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Position logs, speed through water, speed over ground, heading, COG — from your AIS and onboard sensors</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Roll and pitch data, hull dimensions, engine power curves — from vessel records</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Output: a performance polar diagram — speed gain or loss at every wind angle, wave direction, and current strength</div></div>
+      <div class="assist-row"><div class="assist-check">→</div><div class="assist-text">Result: the platform knows exactly how your vessel responds to conditions — not a generic assumption</div></div>
+    </div>
+    <p style="margin-top:14px;">Better routing leads to more accurate ETAs, better fuel prediction, and routing decisions that account for your vessel's actual handling characteristics under load.</p>
+    <span class="profile-stat">Less than 5% MAPE on custom-trained vessel models</span>
+  </div>
+
+  <div class="polar-card reveal">
+    <div class="polar-title">Performance Polars — custom vessel model <span style="color:#94a3b8; font-weight:500; font-size:12px;">(hover the polar)</span></div>
+    <div class="polar-tabs-label">SERVICE SPEED</div>
+    <div class="polar-tabs" id="speedTabs">
+      <button type="button" class="polar-tab" data-i="0">10 kn</button>
+      <button type="button" class="polar-tab active" data-i="1">13 kn</button>
+      <button type="button" class="polar-tab" data-i="2">16 kn</button>
+    </div>
+    <div class="polar-tabs-label">DRAFT</div>
+    <div class="polar-tabs" id="draftTabs">
+      <button type="button" class="polar-tab active" data-i="0">10 m</button>
+      <button type="button" class="polar-tab" data-i="1">14 m</button>
+      <button type="button" class="polar-tab" data-i="2">18 m</button>
+    </div>
+    <div class="polar-stage">
+      <canvas id="polarCanvas" width="1040" height="880" role="img" aria-label="Vessel performance polar showing speed change at each relative direction and Beaufort sea state"></canvas>
+      <canvas id="polarHover" width="1040" height="880" aria-hidden="true"></canvas>
+      <div class="polar-tip" id="polarTip"></div>
+    </div>
+    <div class="polar-foot" id="polarFoot">Draft: 10m · Speed: 13kn · v001</div>
+  </div>
+  <p class="platform-caption reveal" style="text-align:center;">Vessel performance polar — speed change (kn) at each wind/current angle and sea state (Beaufort). Trained from your vessel's own voyage data. Less than 5% MAPE on custom-trained models.</p>
+
+  <div class="divider"></div>
+
+  <!-- Case studies -->
+  <div class="reveal" id="results">
+    <div class="section-label">Real-world results</div>
+    <h2 class="section-title">AIS-validated case studies from the white paper.</h2>
+    <p class="body-text" style="margin-bottom:1rem;">All figures are validated against independent AIS data. Speed over ground, speed through water, and fuel consumption cross-referenced against HIRES-CURRENTS predictions.</p>
+  </div>
+
+  <div class="case-grid">
+    <div class="case-card reveal tilt">
+      <div class="case-header">
+        <div class="case-badge">Validated — AIS data</div>
+        <div>
+          <div class="case-title">Mediterranean short-sea routing — Ro-Ro vessel</div>
+          <div class="case-route">Tangier (Morocco) → Tunis · November 2023</div>
+        </div>
+      </div>
+      <div class="case-desc">Standard route would have faced several counter-current coastal eddies along the Algerian coast. Amphitrite's optimised route — a slight northward detour provided 24 hours in advance — avoided the eddies entirely.</div>
+      <div class="case-stats">
+        <span class="case-stat">+0.6 kn mean SOG improvement</span>
+        <span class="case-stat">Over 1 hour saved</span>
+        <span class="case-stat">Up to 4% fuel saving</span>
+        <span class="case-stat">€2,300–€3,800 saved per equivalent voyage</span>
+      </div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
+    </div>
+
+    <div class="case-card reveal tilt">
+      <div class="case-header">
+        <div class="case-badge">Validated — AIS data</div>
+        <div>
+          <div class="case-title">North Atlantic Gulf Stream transit — pipelay vessel</div>
+          <div class="case-route">Pensacola (US) → Stavanger (Norway) · May–June 2025 · 160m vessel</div>
+        </div>
+      </div>
+      <div class="case-desc">Vessel routed through the Gulf Stream for 3 days using 6 additional Amphitrite waypoints. Set speed 14.3 kn; peak SOG 18.8 kn — the difference accounted for by the current, not additional fuel. SOG-STW measurement matches HIRES-CURRENTS prediction.</div>
+      <div class="case-stats">
+        <span class="case-stat">+2.7 kn for 3 days — no extra fuel</span>
+        <span class="case-stat">Half a day faster at the same fuel burn</span>
+        <span class="case-stat">~€28,800 total saving</span>
+      </div>
+      <div class="case-desc" style="margin-top:8px;">The speed gain came entirely from surfing the Gulf Stream — not increased engine power. Combined with standard weather routing (wind + wave): <b>up to 10–15% total fuel savings</b> for a trans-Atlantic voyage.</div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026 (AIS-validated).</div>
+    </div>
+
+    <div class="case-card reveal tilt">
+      <div class="case-header">
+        <div class="case-badge neutral">1-year analysis</div>
+        <div>
+          <div class="case-title">Med container route — cost of undetected adverse currents</div>
+          <div class="case-route">Port-Said → Tangier-Med · 2,750 TEU feeder · 2022 statistical analysis</div>
+        </div>
+      </div>
+      <div class="case-desc">Statistical analysis of a full year of Suez–Gibraltar container feeder operations. Adverse currents (undetected by standard routing tools) generated systematic fuel over-consumption on repeated voyages.</div>
+      <div class="case-stats">
+        <span class="case-stat">€2,300–€3,800 per voyage in extra fuel costs</span>
+        <span class="case-stat">12–20 T additional CO₂ per voyage</span>
+        <span class="case-stat">Vessel: 18 kn · ~35 T/day fuel</span>
+      </div>
+      <div class="case-desc" style="margin-top:8px;">Multiplied across a year of Med trading: material, measurable fleet cost exposure that standard weather routing tools do not surface.</div>
+      <div class="case-source">Source: Amphitrite white paper, April 2026.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Calculator -->
+  <div class="reveal" id="calculator">
+    <div class="section-label">Estimate fuel savings</div>
+    <h2 class="section-title">What this means for your fleet.</h2>
+  </div>
+
+  <div class="calc-shell reveal">
+    <div class="calc-header">
+      <div class="calc-header-label">Fuel saving potential</div>
+    </div>
+    <div class="calc-box">
+      <div class="calc-lbl">Fuel type</div>
+      <div class="fuel-tabs">
+        <div class="fuel-tab active" onclick="setFuel(550, this)">HFO — 550 EUR/t</div>
+        <div class="fuel-tab" onclick="setFuel(700, this)">VLSFO — 700 EUR/t</div>
+        <div class="fuel-tab" onclick="setFuel(1000, this)">MGO — 1,000 EUR/t</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label for="consumption">Daily consumption (tonnes/day)</label>
+          <input class="calc-input" id="consumption" type="number" value="30" min="5" max="200" oninput="calcUpdate()">
+        </div>
+        <div class="calc-field">
+          <label for="seadays">Sea days per year</label>
+          <input class="calc-input" id="seadays" type="number" value="220" min="50" max="365" oninput="calcUpdate()">
+        </div>
+      </div>
+      <div class="ets-row">
+        <input type="checkbox" id="etsToggle" onchange="calcUpdate()">
+        <label for="etsToggle">Include EU ETS carbon cost (approx. 70 EUR/t CO₂, per white paper)</label>
+      </div>
+      <div class="calc-result">
+        <div class="calc-result-base" id="calc-base">Annual fuel spend: calculating…</div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Currents alone — validated, Med (4%)</span>
+          <span class="calc-result-value" id="r1">—</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Currents alone — validated, N-Atlantic (8–9%)</span>
+          <span class="calc-result-value" id="r2">—</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Full MetOcean routing — wind + waves + currents (10–15%)</span>
+          <span class="calc-result-value" id="r3">—</span>
+        </div>
+      </div>
+      <div class="calc-note">Savings validated from AIS data on real voyages. Actual savings depend on route, vessel type, and prevailing conditions. EU ETS cost estimate based on ~3.2 t CO₂/t HFO; EU ETS price approx. €70/t CO₂ (per Amphitrite white paper, April 2026).</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Ocean Bulletin CTA -->
+  <div class="ob-cta reveal">
+    <div class="ob-cta-label">Try it on your own route</div>
+    <div class="ob-cta-title">See it for your own route.</div>
+    <div class="ob-cta-text">Create an Ocean Bulletin account and plan an actual voyage. The platform shows you how Amphitrite data compares to the standard forecast on your specific passage — with your ports, your dates, your vessel type.</div>
+    <a href="https://bulletin.amphitrite.fr/" class="ob-cta-btn" target="_blank" rel="noopener">Plan a route now →</a>
+    <div class="ob-cta-sub">Create an account — get in touch and we'll activate a full trial.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="reveal" id="faq">
+    <div class="section-label">Common questions</div>
+    <h2 class="section-title">Practical answers for maritime teams.</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <button class="faq-q" type="button" aria-expanded="false">Do we still need a specialist weather routing service alongside this?<span class="faq-toggle" aria-hidden="true">+</span></button>
+      <div class="faq-a"><p>Ocean Bulletin works alongside existing weather routing services as a high-resolution current data layer — or as a standalone routing tool where you're building the capability in-house. Most teams use it to augment decisions their routing officers already make, particularly on ocean crossings where current variability is highest.</p></div>
+    </div>
+    <div class="faq-item reveal" style="--d:.05s">
+      <button class="faq-q" type="button" aria-expanded="false">Is this only relevant for shipping?<span class="faq-toggle" aria-hidden="true">+</span></button>
+      <div class="faq-a"><p>No — active users include offshore construction (Boskalis, Heerema), subsea and cable lay (Orange Marine), defence and naval operations (NATO), research vessels, and superyachts. Anywhere that ocean currents, waves, or wind affect operational decisions.</p></div>
+    </div>
+    <div class="faq-item reveal" style="--d:.1s">
+      <button class="faq-q" type="button" aria-expanded="false">Can this integrate with our existing systems?<span class="faq-toggle" aria-hidden="true">+</span></button>
+      <div class="faq-a"><p>Yes. The MetOcean API delivers data in multiple formats including GPX, CSV, XML, JSON, and more — compatible with all major navigation systems, VMS platforms, and voyage management tools. Route data can be pulled for any set of waypoints and timestamps via a single API call.</p></div>
+    </div>
+    <div class="faq-item reveal" style="--d:.15s">
+      <button class="faq-q" type="button" aria-expanded="false">What areas are covered — including offshore and coastal?<span class="faq-toggle" aria-hidden="true">+</span></button>
+      <div class="faq-a"><p>Global ocean coverage (60°S to 65°N), including high-resolution tidal layers for the Strait of Gibraltar (1/45°), the English Channel (AMM15, 1.5 km), and major coastal chokepoints. Bathymetry and SST layers are also available globally.</p></div>
+    </div>
+    <div class="faq-item reveal" style="--d:.2s">
+      <button class="faq-q" type="button" aria-expanded="false">How do we start — is there a pilot option?<span class="faq-toggle" aria-hidden="true">+</span></button>
+      <div class="faq-a"><p>Yes — a vessel profile and route study is the standard starting point. This establishes a custom performance model for a specific vessel and validates the data against your own voyage history. Get in touch to discuss scope and timing.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- White paper -->
+  <a href="https://bit.ly/4930s9X" class="wp-box reveal" target="_blank" rel="noopener">
+    <div class="wp-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
+    <div>
+      <div class="wp-title">Amphitrite white paper — April 2026</div>
+      <div class="wp-text">HIRES-CURRENTS model validation, AIS-validated case studies, accuracy benchmarks vs EU/US models. bit.ly/4930s9X</div>
+    </div>
+  </a>
+
+  <!-- Final CTA -->
+  <div class="reveal">
+    <div class="section-label">Next step</div>
+    <h2 class="section-title">Book a working session.</h2>
+    <p class="body-text">30 minutes with the Amphitrite team. Bring a route, a vessel, or a specific operational question — we'll show you exactly how the data performs on it.</p>
+    <a href="https://cal.com/noah-amphitrite/meeting" class="cta-primary" target="_blank" rel="noopener">Book a working session</a>
+    <div class="cal-row">
+      <button class="cal-btn" onclick="downloadIcs()"><span class="cal-icon">🍎</span> Apple Calendar</button>
+      <a class="cal-btn" id="gcal-link" href="#" target="_blank" rel="noopener"><span class="cal-icon">📅</span> Google Calendar</a>
+    </div>
+    <div class="contact-line"><strong>Noah</strong> — <a href="tel:+31612184055">+31 612 18 4055</a> · <a href="mailto:noah@amphitrite.fr">noah@amphitrite.fr</a></div>
+    <div class="trial-box">
+      <div class="trial-box-title">Try Ocean Bulletin — 14-day forecast, live.</div>
+      <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. <a href="https://bulletin.amphitrite.fr/" target="_blank" rel="noopener">bulletin.amphitrite.fr →</a></div>
+    </div>
+  </div>
+
+  <footer>
+    <img src="https://api.amphitrite.fr/docs/rotating_logo.gif" alt="Amphitrite">
+    <div>
+      <div class="foot-name">Amphitrite</div>
+      <div class="foot-sub">Ocean Data Intelligence · amphitrite.fr · bulletin.amphitrite.fr</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============ scroll progress ============ */
+  var progressEl = document.getElementById('progress');
+  window.addEventListener('scroll', function () {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    progressEl.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  }, { passive: true });
+
+  /* ============ reveals + count-up ============ */
+  function countUp(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (isNaN(target) || reduce) { el.textContent = el.getAttribute('data-count'); return; }
+    var dur = 900, start = null;
+    function tick(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    setTimeout(function () { el.textContent = target; }, dur + 150);
+  }
+  var reveals = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window) || reduce) {
+    reveals.forEach(function (el) { el.classList.add('in-view'); });
+    document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = el.getAttribute('data-count'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in-view');
+        entry.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ============ FAQ ============ */
+  document.querySelectorAll('.faq-q').forEach(function (q) {
+    q.addEventListener('click', function () {
+      var item = q.parentElement;
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function (i) {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) { item.classList.add('open'); q.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* ============ 3D tilt on case cards ============ */
+  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.tilt').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        card.style.transform = 'perspective(900px) rotateY(' + ((px - 0.5) * 4) + 'deg) rotateX(' + ((0.5 - py) * 3) + 'deg) translateY(-2px)';
+      });
+      card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+    });
+  }
+
+  /* ============ Ocean Bulletin flow field ============ */
+  (function flowField() {
+    var canvas = document.getElementById('flowCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = 1000, H = 620, dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    function resize() {
+      var box = canvas.getBoundingClientRect();
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+    }
+    resize();
+    ctx.fillStyle = '#0b2a52';
+    ctx.fillRect(0, 0, W, H);
+
+    // Gulf-Stream-like jet centerline + eddies
+    var jet = [[120,540],[200,500],[270,450],[340,390],[430,320],[520,275],[610,250],[700,235],[790,225]];
+    var eddies = [
+      {x:450,y:200,s:1,r:70},{x:560,y:340,s:-1,r:65},{x:660,y:300,s:1,r:55},
+      {x:380,y:160,s:-1,r:50},{x:300,y:300,s:1,r:48},{x:740,y:330,s:-1,r:60},
+      {x:520,y:120,s:1,r:45},{x:250,y:200,s:-1,r:40},{x:820,y:420,s:1,r:52},
+      {x:640,y:440,s:-1,r:58},{x:420,y:480,s:1,r:44}
+    ];
+    function field(x, y) {
+      var vx = 0.12, vy = 0.02; // ambient drift
+      // jet: find nearest segment
+      var best = 1e9, tx = 0, ty = 0;
+      for (var i = 0; i < jet.length - 1; i++) {
+        var ax = jet[i][0], ay = jet[i][1], bx = jet[i+1][0], by = jet[i+1][1];
+        var dx = bx - ax, dy = by - ay, len2 = dx*dx + dy*dy;
+        var t = Math.max(0, Math.min(1, ((x-ax)*dx + (y-ay)*dy) / len2));
+        var px = ax + t*dx, py = ay + t*dy;
+        var d2 = (x-px)*(x-px) + (y-py)*(y-py);
+        if (d2 < best) { best = d2; var l = Math.sqrt(len2); tx = dx/l; ty = dy/l; }
+      }
+      var g = Math.exp(-best / (2 * 42 * 42));
+      vx += tx * 3.2 * g; vy += ty * 3.2 * g;
+      // eddies
+      for (var j = 0; j < eddies.length; j++) {
+        var e = eddies[j];
+        var ex = x - e.x, ey = y - e.y;
+        var d = Math.sqrt(ex*ex + ey*ey) + 0.001;
+        var f = Math.exp(-d / e.r) * 1.6;
+        vx += e.s * (-ey / d) * f; vy += e.s * (ex / d) * f;
+      }
+      // gentle noise
+      vx += 0.25 * Math.sin(y * 0.02 + x * 0.008);
+      vy += 0.25 * Math.sin(x * 0.017 - y * 0.011);
+      return [vx, vy];
+    }
+    var N = 900, parts = [];
+    for (var i = 0; i < N; i++) parts.push({ x: Math.random()*W, y: Math.random()*H, life: Math.random()*120 });
+    var running = true, visible = true;
+    function frame() {
+      if (!running || !visible) return;
+      ctx.fillStyle = 'rgba(11,42,82,0.075)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.lineCap = 'round';
+      for (var i = 0; i < N; i++) {
+        var p = parts[i];
+        var v = field(p.x, p.y);
+        var speed = Math.sqrt(v[0]*v[0] + v[1]*v[1]);
+        var nx = p.x + v[0] * 1.7, ny = p.y + v[1] * 1.7;
+        var a = Math.min(0.06 + speed * 0.16, 0.75);
+        ctx.strokeStyle = 'rgba(214,235,255,' + a.toFixed(3) + ')';
+        ctx.lineWidth = Math.min(0.7 + speed * 0.35, 2.1);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
+        p.x = nx; p.y = ny; p.life--;
+        if (p.life <= 0 || p.x < -5 || p.x > W+5 || p.y < -5 || p.y > H+5) {
+          p.x = Math.random()*W; p.y = Math.random()*H; p.life = 60 + Math.random()*120;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    if (reduce) {
+      // static: run a burst of frames once for a still texture
+      for (var f = 0; f < 90; f++) {
+        ctx.fillStyle = 'rgba(11,42,82,0.06)'; ctx.fillRect(0,0,W,H);
+        for (var i2 = 0; i2 < N; i2++) {
+          var p2 = parts[i2], v2 = field(p2.x, p2.y);
+          var sp = Math.sqrt(v2[0]*v2[0]+v2[1]*v2[1]);
+          var nx2 = p2.x + v2[0]*1.7, ny2 = p2.y + v2[1]*1.7;
+          ctx.strokeStyle = 'rgba(214,235,255,' + Math.min(0.06+sp*0.16, 0.75).toFixed(3) + ')';
+          ctx.lineWidth = Math.min(0.7+sp*0.35, 2.1);
+          ctx.beginPath(); ctx.moveTo(p2.x,p2.y); ctx.lineTo(nx2,ny2); ctx.stroke();
+          p2.x = nx2; p2.y = ny2;
+          if (p2.x<-5||p2.x>W+5||p2.y<-5||p2.y>H+5){ p2.x=Math.random()*W; p2.y=Math.random()*H; }
+        }
+      }
+    } else {
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (en) {
+          visible = en[0].isIntersecting;
+          if (visible) requestAnimationFrame(frame);
+        }, { threshold: 0.05 }).observe(canvas);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // impact dots along optimised route
+    var path = document.getElementById('routeOpt');
+    var dots = document.getElementById('routeDots');
+    if (path && dots && path.getTotalLength) {
+      var L = path.getTotalLength();
+      for (var k = 0; k <= 46; k++) {
+        var t = k / 46;
+        var pt = path.getPointAtLength(L * t);
+        // impact profile: adverse/neutral near coast, strong gain mid (Gulf Stream), easing at end
+        var impact = -0.8 + 2.6 * Math.exp(-Math.pow((t - 0.45) / 0.28, 2)); // ~[-0.8 .. +1.8]
+        var c;
+        if (impact < -0.3) c = '#e8a33d';
+        else if (impact < 0.2) c = '#f4d58a';
+        else if (impact < 0.8) c = '#a5d99f';
+        else if (impact < 1.4) c = '#4ecb71';
+        else c = '#22c55e';
+        var circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circ.setAttribute('cx', pt.x.toFixed(1)); circ.setAttribute('cy', pt.y.toFixed(1));
+        circ.setAttribute('r', '4.4'); circ.setAttribute('fill', c);
+        circ.setAttribute('stroke', 'rgba(8,24,50,0.55)'); circ.setAttribute('stroke-width', '1');
+        dots.appendChild(circ);
+      }
+    }
+
+    // voyage panel toggle
+    var voy = {
+      direct: { dist: '2841.3 nm', time: '267.6 h', stw: '10.6 kn', sog: '10.6 kn' },
+      opt:    { dist: '2824.9 nm', time: '252 h',   stw: '10.7 kn', sog: '11.2 kn' }
+    };
+    document.querySelectorAll('.ob-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.ob-tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        var d = voy[tab.getAttribute('data-voy')];
+        document.getElementById('voyDist').textContent = d.dist;
+        document.getElementById('voyTime').textContent = d.time;
+        document.getElementById('voySTW').textContent = d.stw;
+        document.getElementById('voySOG').textContent = d.sog;
+        var opt = tab.getAttribute('data-voy') === 'opt';
+        dots.style.opacity = opt ? '1' : '0.25';
+        document.getElementById('routeOpt').style.opacity = opt ? '1' : '0.3';
+        document.getElementById('routeDirect').style.opacity = opt ? '0.55' : '1';
+        document.getElementById('routeDirect').style.strokeWidth = opt ? '2.4' : '3.4';
+      });
+    });
+  })();
+
+  /* ============ Compare Routes chart ============ */
+  (function compareChart() {
+    var svg = document.getElementById('compareChart');
+    if (!svg) return;
+    var W = 920, H = 300, padL = 46, padR = 14, padT = 16, padB = 30;
+    var yMin = 10.0, yMax = 13.0;
+    function sx(t) { return padL + t * (W - padL - padR); }
+    function sy(v) { return padT + (1 - (v - yMin) / (yMax - yMin)) * (H - padT - padB); }
+    function series(base, amp, phase, spikes) {
+      var pts = [];
+      for (var i = 0; i <= 150; i++) {
+        var t = i / 150;
+        var v = base
+          + amp * Math.sin(t * 19 + phase) * 0.5
+          + amp * Math.sin(t * 7.3 + phase * 2.1) * 0.7
+          + amp * Math.sin(t * 41 + phase * 0.6) * 0.18;
+        if (spikes && i === 1) v += 1.1;
+        pts.push([t, Math.max(yMin + 0.08, Math.min(yMax - 0.08, v))]);
+      }
+      return pts;
+    }
+    var direct = series(10.85, 0.45, 1.2, false);
+    var opt = series(11.55, 0.75, 4.0, true);
+    var ns = 'http://www.w3.org/2000/svg';
+    // grid + labels
+    var days = ['Jul 12', 'Jul 13', 'Jul 14', 'Jul 15', 'Jul 16', 'Jul 17', 'Jul 18'];
+    for (var d = 0; d < days.length; d++) {
+      var x = sx(d / 6);
+      var l = document.createElementNS(ns, 'line');
+      l.setAttribute('x1', x); l.setAttribute('x2', x); l.setAttribute('y1', padT); l.setAttribute('y2', H - padB);
+      l.setAttribute('stroke', '#e3ecf4'); svg.appendChild(l);
+      var tx = document.createElementNS(ns, 'text');
+      tx.setAttribute('x', x); tx.setAttribute('y', H - 10); tx.setAttribute('text-anchor', 'middle');
+      tx.setAttribute('font-size', '11'); tx.setAttribute('fill', '#64748b'); tx.setAttribute('font-family', 'DM Sans, sans-serif');
+      tx.textContent = days[d]; svg.appendChild(tx);
+    }
+    for (var v = 10; v <= 13; v += 0.5) {
+      var y = sy(v);
+      var gl = document.createElementNS(ns, 'line');
+      gl.setAttribute('x1', padL); gl.setAttribute('x2', W - padR); gl.setAttribute('y1', y); gl.setAttribute('y2', y);
+      gl.setAttribute('stroke', v % 1 === 0 ? '#dbe6f0' : '#eef3f8'); svg.appendChild(gl);
+      var ty = document.createElementNS(ns, 'text');
+      ty.setAttribute('x', padL - 8); ty.setAttribute('y', y + 4); ty.setAttribute('text-anchor', 'end');
+      ty.setAttribute('font-size', '11'); ty.setAttribute('fill', '#64748b'); ty.setAttribute('font-family', 'DM Sans, sans-serif');
+      ty.textContent = v.toFixed(1); svg.appendChild(ty);
+    }
+    var axl = document.createElementNS(ns, 'text');
+    axl.setAttribute('x', 14); axl.setAttribute('y', H / 2); axl.setAttribute('font-size', '10.5');
+    axl.setAttribute('fill', '#64748b'); axl.setAttribute('font-family', 'DM Sans, sans-serif');
+    axl.setAttribute('transform', 'rotate(-90 14 ' + (H / 2) + ')'); axl.setAttribute('text-anchor', 'middle');
+    axl.textContent = 'SOG (kn)'; svg.appendChild(axl);
+    function draw(pts, color) {
+      var dstr = pts.map(function (p, i) { return (i ? 'L' : 'M') + sx(p[0]).toFixed(1) + ',' + sy(p[1]).toFixed(1); }).join(' ');
+      var path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', dstr); path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', color); path.setAttribute('stroke-width', '2');
+      svg.appendChild(path);
+      for (var i = 0; i < pts.length; i += 3) {
+        var c = document.createElementNS(ns, 'circle');
+        c.setAttribute('cx', sx(pts[i][0]).toFixed(1)); c.setAttribute('cy', sy(pts[i][1]).toFixed(1));
+        c.setAttribute('r', '2.4'); c.setAttribute('fill', color);
+        svg.appendChild(c);
+      }
+      if (!reduce && path.getTotalLength) {
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+        path.style.transition = 'stroke-dashoffset 2.2s ease .3s';
+        requestAnimationFrame(function () {
+          new IntersectionObserver(function (en, ob) {
+            if (en[0].isIntersecting) { path.style.strokeDashoffset = '0'; ob.disconnect(); }
+          }, { threshold: 0.3 }).observe(svg);
+        });
+      }
+    }
+    draw(direct, '#4A90D9');
+    draw(opt, '#f59e0b');
+  })();
+
+  /* ============ Interactive performance polar ============ */
+  (function polar() {
+    var canvas = document.getElementById('polarCanvas');
+    var hover = document.getElementById('polarHover');
+    var tip = document.getElementById('polarTip');
+    var foot = document.getElementById('polarFoot');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var hctx = hover.getContext('2d');
+    var W = canvas.width, H = canvas.height;         // 1040 x 880 internal
+    var cx = 240, cy = 470, R = 360;                 // 0° up, semicircle opens right
+    var speeds = [10, 13, 16], drafts = [10, 14, 18];
+    var speedIdx = 1, draftIdx = 0;
+
+    function valueAt(angDeg, bf, sIdx, dIdx) {
+      var maxL = [4.6, 6.2, 7.6][sIdx];
+      var dF = [0.88, 1.0, 1.14][dIdx];
+      var a = angDeg * Math.PI / 180;
+      var angular = 0.52 + 0.48 * Math.cos(a);                 // head 1.0 → following 0.04
+      var loss = maxL * dF * Math.pow(bf / 10, 1.9) * angular;
+      var gain = 1.5 * (bf / 10) * Math.pow((1 - Math.cos(a)) / 2, 2.4); // following-seas assist
+      return Math.max(-2, Math.min(7, loss - gain));
+    }
+    // color scale: -2 green → 0 near-white → +7 dark red
+    function colorFor(v) {
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function mix(c1, c2, t) { return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)]; }
+      var c;
+      if (v <= 0) c = mix([22,163,74], [246,250,246], (v + 2) / 2);
+      else if (v <= 1.5) c = mix([246,250,246], [253,230,138], v / 1.5);
+      else if (v <= 3.5) c = mix([253,230,138], [249,115,22], (v - 1.5) / 2);
+      else if (v <= 5.5) c = mix([249,115,22], [194,65,12], (v - 3.5) / 2);
+      else c = mix([194,65,12], [127,29,29], (v - 5.5) / 1.5);
+      return c;
+    }
+    function render() {
+      ctx.clearRect(0, 0, W, H);
+      var img = ctx.createImageData(W, H);
+      var data = img.data;
+      for (var y = 0; y < H; y++) {
+        for (var x = cx; x < W; x++) {
+          var dx = x - cx, dy = y - cy;
+          var r = Math.sqrt(dx * dx + dy * dy);
+          if (r > R || dx < 0) continue;
+          var ang = Math.atan2(dx, -dy) * 180 / Math.PI;   // 0 up → 180 down (right half)
+          if (ang < 0 || ang > 180) continue;
+          var bf = r / R * 10;
+          var c = colorFor(valueAt(ang, bf, speedIdx, draftIdx));
+          var idx = (y * W + x) * 4;
+          data[idx] = c[0]; data[idx + 1] = c[1]; data[idx + 2] = c[2]; data[idx + 3] = 255;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+      // rings (Beaufort 2..10)
+      ctx.strokeStyle = 'rgba(30,58,95,0.35)'; ctx.lineWidth = 1.4;
+      for (var b = 2; b <= 10; b += 2) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, R * b / 10, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
+      }
+      // radial lines every 30°
+      ctx.strokeStyle = 'rgba(30,58,95,0.28)'; ctx.lineWidth = 1.2;
+      for (var adeg = 0; adeg <= 180; adeg += 30) {
+        var ar = adeg * Math.PI / 180;
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.sin(ar) * R, cy - Math.cos(ar) * R); ctx.stroke();
+      }
+      // outer edge
+      ctx.strokeStyle = '#14304f'; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
+      // Beaufort labels along 135° diagonal
+      ctx.fillStyle = '#14304f'; ctx.font = '700 30px DM Sans, sans-serif'; ctx.textAlign = 'center';
+      for (var b2 = 2; b2 <= 10; b2 += 2) {
+        var rr = R * b2 / 10, la = 135 * Math.PI / 180;
+        ctx.fillText(String(b2), cx + Math.sin(la) * rr + 20, cy - Math.cos(la) * rr + 10);
+      }
+      ctx.font = '700 34px DM Sans, sans-serif';
+      ctx.fillText('Beaufort', cx + Math.sin(135 * Math.PI/180) * (R + 66) + 30, cy - Math.cos(135 * Math.PI/180) * (R + 66));
+      // angle labels
+      ctx.font = '700 38px DM Sans, sans-serif';
+      ctx.fillText('0°', cx - 52, cy - R + 14);
+      ctx.fillText('90°', cx + R + 58, cy + 12);
+      ctx.fillText('180°', cx - 62, cy + R + 6);
+      ctx.font = '500 30px DM Sans, sans-serif'; ctx.fillStyle = '#3b5a80';
+      ctx.fillText('Direction [deg]', cx + 240, cy - R - 24);
+      // color scale bar
+      var bx = W - 130, by = cy - R + 30, bw = 30, bh = 2 * R - 60;
+      for (var yy = 0; yy < bh; yy++) {
+        var vv = 7 - (yy / bh) * 9;
+        var cc = colorFor(vv);
+        ctx.fillStyle = 'rgb(' + (cc[0]|0) + ',' + (cc[1]|0) + ',' + (cc[2]|0) + ')';
+        ctx.fillRect(bx, by + yy, bw, 1.5);
+      }
+      ctx.strokeStyle = '#c9d8ea'; ctx.lineWidth = 1.5; ctx.strokeRect(bx, by, bw, bh);
+      ctx.fillStyle = '#14304f'; ctx.font = '700 32px DM Sans, sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText('+7', bx + bw + 12, by + 14);
+      ctx.fillText('0', bx + bw + 12, by + bh * (7 / 9) + 10);
+      ctx.fillText('-2', bx + bw + 12, by + bh + 4);
+      ctx.font = '600 26px DM Sans, sans-serif'; ctx.fillStyle = '#3b5a80'; ctx.textAlign = 'center';
+      ctx.fillText('Speed Loss [kn]', bx + bw / 2 - 20, by + bh + 46);
+      foot.textContent = 'Draft: ' + drafts[draftIdx] + 'm · Speed: ' + speeds[speedIdx] + 'kn · v001';
+    }
+    render();
+
+    // hover interaction
+    function toCanvasCoords(e) {
+      var r = canvas.getBoundingClientRect();
+      return [ (e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H, r ];
+    }
+    hover.style.pointerEvents = 'none';
+    canvas.parentElement.addEventListener('pointermove', function (e) {
+      var m = toCanvasCoords(e), x = m[0], y = m[1], rect = m[2];
+      var dx = x - cx, dy = y - cy;
+      var r = Math.sqrt(dx * dx + dy * dy);
+      var ang = Math.atan2(dx, -dy) * 180 / Math.PI;
+      hctx.clearRect(0, 0, W, H);
+      if (dx < 0 || r > R || ang < 0 || ang > 180) { tip.classList.remove('show'); return; }
+      var bf = r / R * 10;
+      var val = valueAt(ang, bf, speedIdx, draftIdx);
+      // dashed guide + marker
+      hctx.strokeStyle = 'rgba(20,48,79,0.65)'; hctx.lineWidth = 3; hctx.setLineDash([10, 10]);
+      hctx.beginPath(); hctx.moveTo(cx, cy); hctx.lineTo(x, y); hctx.stroke();
+      hctx.setLineDash([]);
+      hctx.strokeStyle = '#14304f'; hctx.lineWidth = 5; hctx.fillStyle = 'rgba(255,255,255,0.85)';
+      hctx.beginPath(); hctx.arc(x, y, 12, 0, Math.PI * 2); hctx.fill(); hctx.stroke();
+      // tooltip
+      var c = colorFor(val);
+      tip.innerHTML = '<div class="row1">Direction: ' + Math.round(ang) + '°</div>' +
+        '<div class="row1">Beaufort: ' + bf.toFixed(1) + '</div>' +
+        '<div class="val"><span class="swatch" style="background:rgb(' + (c[0]|0) + ',' + (c[1]|0) + ',' + (c[2]|0) + ')"></span>' +
+        (val >= 0 ? '+' : '') + val.toFixed(2) + ' kn</div>';
+      var stage = canvas.parentElement.getBoundingClientRect();
+      var tipX = e.clientX - stage.left + 18, tipY = e.clientY - stage.top - 14;
+      if (tipX > stage.width - 150) tipX = e.clientX - stage.left - 160;
+      tip.style.left = tipX + 'px'; tip.style.top = tipY + 'px';
+      tip.classList.add('show');
+    });
+    canvas.parentElement.addEventListener('pointerleave', function () {
+      hctx.clearRect(0, 0, W, H); tip.classList.remove('show');
+    });
+
+    // tabs
+    document.querySelectorAll('#speedTabs .polar-tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        document.querySelectorAll('#speedTabs .polar-tab').forEach(function (x) { x.classList.remove('active'); });
+        t.classList.add('active'); speedIdx = +t.getAttribute('data-i'); render();
+      });
+    });
+    document.querySelectorAll('#draftTabs .polar-tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        document.querySelectorAll('#draftTabs .polar-tab').forEach(function (x) { x.classList.remove('active'); });
+        t.classList.add('active'); draftIdx = +t.getAttribute('data-i'); render();
+      });
+    });
+  })();
+
+  /* ============ Three.js hero ocean ============ */
+  function initHero() {
+    var canvas = document.getElementById('ocean3d');
+    if (!window.THREE || !canvas) { document.documentElement.classList.add('no-webgl'); return; }
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    } catch (e) { document.documentElement.classList.add('no-webgl'); return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    var scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x040d1c, 0.0038);
+    var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 800);
+    camera.position.set(0, 30, 92);
+
+    var GX = 150, GZ = 95, SX = 460, SZ = 300;
+    var geo = new THREE.BufferGeometry();
+    var count = GX * GZ;
+    var pos = new Float32Array(count * 3);
+    var base = new Float32Array(count * 2);
+    var ci = 0;
+    for (var iz = 0; iz < GZ; iz++) {
+      for (var ix = 0; ix < GX; ix++) {
+        var x = (ix / (GX - 1) - 0.5) * SX;
+        var z = -(iz / (GZ - 1)) * SZ + 30;
+        pos[ci * 3] = x; pos[ci * 3 + 1] = 0; pos[ci * 3 + 2] = z;
+        base[ci * 2] = x; base[ci * 2 + 1] = z;
+        ci++;
+      }
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x5fb6e8, size: 1.35, transparent: true, opacity: 0.62, sizeAttenuation: true }));
+    scene.add(pts);
+    var pts2 = new THREE.Points(geo.clone(), new THREE.PointsMaterial({ color: 0x37c2b6, size: 0.9, transparent: true, opacity: 0.28, sizeAttenuation: true }));
+    pts2.position.y = -2.5;
+    scene.add(pts2);
+
+    function waveY(x, z, t) {
+      return 2.4 * Math.sin(x * 0.045 + t * 0.9) * Math.cos(z * 0.035 + t * 0.55)
+           + 3.4 * Math.sin(x * 0.012 - t * 0.32 + z * 0.008)
+           + 1.1 * Math.sin(z * 0.09 + t * 1.3);
+    }
+
+    // optimised route arc + traveling vessel light
+    var curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-190, 9, -55),
+      new THREE.Vector3(-90, 11, -95),
+      new THREE.Vector3(20, 12, -110),
+      new THREE.Vector3(120, 10, -85),
+      new THREE.Vector3(200, 9, -45)
+    ]);
+    var routeGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(120));
+    scene.add(new THREE.Line(routeGeo, new THREE.LineBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.85 })));
+    var vessel = new THREE.Mesh(new THREE.SphereGeometry(1.9, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    scene.add(vessel);
+    var glow = new THREE.PointLight(0x22c55e, 1.4, 90);
+    scene.add(glow);
+    var mk = new THREE.MeshBasicMaterial({ color: 0x4A90D9 });
+    var mDep = new THREE.Mesh(new THREE.SphereGeometry(2.2, 10, 10), mk); mDep.position.copy(curve.getPoint(0)); scene.add(mDep);
+    var mArr = new THREE.Mesh(new THREE.SphereGeometry(2.2, 10, 10), new THREE.MeshBasicMaterial({ color: 0x22c55e })); mArr.position.copy(curve.getPoint(1)); scene.add(mArr);
+
+    var mx = 0, my = 0;
+    if (!reduce) {
+      window.addEventListener('pointermove', function (e) {
+        mx = (e.clientX / window.innerWidth - 0.5);
+        my = (e.clientY / window.innerHeight - 0.5);
+      }, { passive: true });
+    }
+    function resize() {
+      var w = canvas.clientWidth || window.innerWidth;
+      var h = canvas.clientHeight || window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }, { threshold: 0.02 }).observe(canvas);
+    }
+    var t0 = performance.now();
+    function renderFrame(now) {
+      var t = Math.max(0, (now - t0) / 1000);
+      var arr = geo.attributes.position.array;
+      for (var i = 0; i < count; i++) {
+        arr[i * 3 + 1] = waveY(base[i * 2], base[i * 2 + 1], t);
+      }
+      geo.attributes.position.needsUpdate = true;
+      var tv = ((t * 0.045) % 1 + 1) % 1;
+      var vp = curve.getPoint(tv);
+      vessel.position.copy(vp); glow.position.copy(vp).y += 4;
+      camera.position.x += (mx * 10 - camera.position.x) * 0.03;
+      camera.position.y += (30 - my * 8 - camera.position.y) * 0.03;
+      camera.lookAt(0, 2, -70);
+      renderer.render(scene, camera);
+    }
+    if (reduce) {
+      renderFrame(t0 + 3000);
+    } else {
+      (function loop(now) {
+        requestAnimationFrame(loop);
+        if (visible) renderFrame(now || performance.now());
+      })(t0);
+    }
+  }
+  if (document.readyState === 'complete') initHero();
+  else window.addEventListener('load', initHero);
+})();
+
+/* ============ Calculator (globals for inline handlers) ============ */
+var fuelPrice = 550;
+function setFuel(price, el) {
+  fuelPrice = price;
+  document.querySelectorAll('.fuel-tab').forEach(function (t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  calcUpdate();
+}
+function calcUpdate() {
+  var consumption = parseFloat(document.getElementById('consumption').value) || 30;
+  var seadays = parseFloat(document.getElementById('seadays').value) || 220;
+  var ets = document.getElementById('etsToggle').checked;
+  var annualTonnes = consumption * seadays;
+  var baseCost = annualTonnes * fuelPrice;
+  var etsCostPerTonne = ets ? 3.2 * 70 : 0;
+  var totalPerTonne = fuelPrice + etsCostPerTonne;
+  var totalBase = annualTonnes * totalPerTonne;
+  document.getElementById('calc-base').textContent =
+    'Annual fuel spend: €' + Math.round(baseCost / 1000).toLocaleString() + 'k'
+    + (ets ? ' · with EU ETS: €' + Math.round(totalBase / 1000).toLocaleString() + 'k' : '');
+  document.getElementById('r1').textContent = '€' + Math.round(totalBase * 0.04 / 1000).toLocaleString() + 'k/yr';
+  document.getElementById('r2').textContent =
+    '€' + Math.round(totalBase * 0.08 / 1000).toLocaleString() + '–' + Math.round(totalBase * 0.09 / 1000).toLocaleString() + 'k/yr';
+  document.getElementById('r3').textContent =
+    '€' + Math.round(totalBase * 0.10 / 1000).toLocaleString() + '–' + Math.round(totalBase * 0.15 / 1000).toLocaleString() + 'k/yr';
+}
+calcUpdate();
+
+/* Google Calendar link */
+document.getElementById('gcal-link').href =
+  'https://calendar.google.com/calendar/render?action=TEMPLATE'
+  + '&text=Amphitrite+Working+Session'
+  + '&details=Marine+weather+intelligence+session+with+Amphitrite'
+  + '&location=https://cal.com/noah-amphitrite/meeting';
+
+/* Apple Calendar (.ics) */
+function downloadIcs() {
+  var now = new Date();
+  var start = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  start.setHours(10, 0, 0, 0);
+  var end = new Date(start.getTime() + 30 * 60 * 1000);
+  function fmt(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+  var ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT',
+    'DTSTART:' + fmt(start),
+    'DTEND:' + fmt(end),
+    'SUMMARY:Amphitrite Working Session',
+    'DESCRIPTION:Marine weather intelligence session. Book at https://cal.com/noah-amphitrite/meeting',
+    'URL:https://cal.com/noah-amphitrite/meeting',
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  var blob = new Blob([ics], { type: 'text/calendar' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'amphitrite-session.ics';
+  a.click();
+}
+</script>
+</body>
+</html>
