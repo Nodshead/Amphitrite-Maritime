@@ -408,7 +408,7 @@
     <a class="recog-card reveal" style="--d:.07s" href="https://defence-industry-space.ec.europa.eu/eu-defence-industry/eu-defence-innovation-scheme-eudis_en" target="_blank" rel="noopener">
       <span class="recog-kind">EU defence innovation</span>
       <div class="recog-org">EUDIS <span class="link-arrow">→</span></div>
-      <div class="recog-desc">Recently joined EUDIS, the EU's Defence Innovation Scheme.</div>
+      <div class="recog-desc">Recently joined EUDIS, the EU's Defence Innovation Scheme — selected as one of 20 from 499 applicants.</div>
     </a>
     <a class="recog-card reveal" style="--d:.14s" href="https://blogs.nvidia.com/blog/amphitrite-ocean-simulation-prediction/" target="_blank" rel="noopener">
       <span class="recog-kind">Featured by</span>
@@ -425,7 +425,13 @@
       <div class="recog-org">ESA <span class="link-arrow">→</span></div>
       <div class="recog-desc">ESA-backed Ocean Bulletin / Green Digital Shipping Corridor project.</div>
     </a>
+    <a class="recog-card reveal" style="--d:.35s" href="https://heerema.com/insights/data-driven-voyage-optimization-delivers-measurable-impact-on-sleipnir-transit" target="_blank" rel="noopener">
+      <span class="recog-kind">Client-published case study</span>
+      <div class="recog-org">Heerema — Sleipnir pilot <span class="link-arrow">→</span></div>
+      <div class="recog-desc">Heerema's own write-up of the SSCV Sleipnir transit: 240 nm shorter, 2.5 days faster, 14–18% CO₂ cut — in their words, with their numbers.</div>
+    </a>
   </div>
+  <p class="reveal" style="font-size:12.5px; color:#6f96c4; margin: 4px 2px 0; line-height:1.6;">More to come here — we'll shortly be publishing the Amphitrite newsletter, covering new voyages, model releases, and case studies.</p>
 
   <div class="divider"></div>
 
@@ -789,13 +795,17 @@
       <div class="calc-header-label">Fuel saving potential</div>
     </div>
     <div class="calc-box">
-      <div class="calc-lbl">Fuel type</div>
+      <div class="calc-lbl">Fuel type <span style="font-weight:500; color:#6f96c4;">— defaults are indicative multi-year averages, editable below</span></div>
       <div class="fuel-tabs">
-        <div class="fuel-tab active" onclick="setFuel(550, this)">HFO — 550 EUR/t</div>
-        <div class="fuel-tab" onclick="setFuel(700, this)">VLSFO — 700 EUR/t</div>
-        <div class="fuel-tab" onclick="setFuel(1000, this)">MGO — 1,000 EUR/t</div>
+        <div class="fuel-tab active" onclick="setFuel('hsfo', 500, this)">HSFO — €500/t avg</div>
+        <div class="fuel-tab" onclick="setFuel('vlsfo', 600, this)">VLSFO — €600/t avg</div>
+        <div class="fuel-tab" onclick="setFuel('mgo', 900, this)">MGO — €900/t avg</div>
       </div>
       <div class="calc-row">
+        <div class="calc-field">
+          <label for="fuelprice">Bunker price (EUR/t) — edit to today's quote</label>
+          <input class="calc-input" id="fuelprice" type="number" value="500" min="100" max="3000" oninput="calcUpdate()">
+        </div>
         <div class="calc-field">
           <label for="consumption">Daily consumption (tonnes/day)</label>
           <input class="calc-input" id="consumption" type="number" value="30" min="5" max="200" oninput="calcUpdate()">
@@ -824,7 +834,7 @@
           <span class="calc-result-value" id="r3">—</span>
         </div>
       </div>
-      <div class="calc-note">Savings validated from AIS data on real voyages. Actual savings depend on route, vessel type, and prevailing conditions. EU ETS cost estimate based on ~3.2 t CO₂/t HFO; EU ETS price approx. €70/t CO₂ (per Amphitrite white paper, April 2026).</div>
+      <div class="calc-note">Savings percentages are validated from AIS data on real voyages (Amphitrite white paper, April 2026); actual savings depend on route, vessel type, and prevailing conditions. <b style="color:#8fabce;">Default bunker prices are indicative multi-year averages, not live quotes</b> — based on the Ship &amp; Bunker Global 20 Ports index (2022–2026), converted to EUR and rounded. Bunker prices are volatile: G20 VLSFO traded in the low $400s/mt in early 2026 and ≈$695/mt on 8 Jul 2026 after the Middle East escalation — enter your own bunker cost in the price field. EU ETS estimate uses IMO CO₂ factors (~3.1–3.2 t CO₂/t fuel by grade) at ≈€70/t CO₂ (per white paper); ETS applies fully to intra-EEA voyages and 50% of voyages in/out of the EEA, so treat the ETS uplift here as an upper bound.</div>
     </div>
   </div>
 
@@ -833,10 +843,10 @@
   <!-- Ocean Bulletin CTA -->
   <div class="ob-cta reveal">
     <div class="ob-cta-label">Try it on your own route</div>
-    <div class="ob-cta-title">See it for your own route.</div>
+    <div class="ob-cta-title">Create your account — see it on your own route.</div>
     <div class="ob-cta-text">Create an Ocean Bulletin account and plan an actual voyage. The platform shows you how Amphitrite data compares to the standard forecast on your specific passage — with your ports, your dates, your vessel type.</div>
-    <a href="https://bulletin.amphitrite.fr/" class="ob-cta-btn" target="_blank" rel="noopener">Plan a route now →</a>
-    <div class="ob-cta-sub">Create an account — get in touch and we'll activate a full trial.</div>
+    <a href="https://bulletin.amphitrite.fr/" class="ob-cta-btn" target="_blank" rel="noopener">Create an account →</a>
+    <div class="ob-cta-sub">Once your account exists, get in touch and we'll load <b style="color:#c3d6ee;">voyage-optimisation tokens</b> onto it — optimise real voyages, not a time-boxed trial.</div>
   </div>
 
   <div class="divider"></div>
@@ -895,7 +905,7 @@
     <div class="contact-line"><strong>Noah</strong> — <a href="tel:+31612184055">+31 612 18 4055</a> · <a href="mailto:noah@amphitrite.fr">noah@amphitrite.fr</a></div>
     <div class="trial-box">
       <div class="trial-box-title">Try Ocean Bulletin — 14-day forecast, live.</div>
-      <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. <a href="https://bulletin.amphitrite.fr/" target="_blank" rel="noopener">bulletin.amphitrite.fr →</a></div>
+      <div class="trial-box-desc">Access Amphitrite's Ocean Bulletin platform. Plan a route with 14-day wind, wave, and ocean current data — see how it compares to what you're currently using. Create an account and get in touch: we'll add voyage-optimisation tokens to it. <a href="https://bulletin.amphitrite.fr/" target="_blank" rel="noopener">bulletin.amphitrite.fr →</a></div>
     </div>
   </div>
 
@@ -1468,20 +1478,23 @@
 })();
 
 /* ============ Calculator (globals for inline handlers) ============ */
-var fuelPrice = 550;
-function setFuel(price, el) {
-  fuelPrice = price;
+var fuelType = 'hsfo';
+var ETS_FACTORS = { hsfo: 3.114, vlsfo: 3.151, mgo: 3.206 }; // IMO CO2 emission factors, t CO2 per t fuel
+function setFuel(type, price, el) {
+  fuelType = type;
+  document.getElementById('fuelprice').value = price;
   document.querySelectorAll('.fuel-tab').forEach(function (t) { t.classList.remove('active'); });
   el.classList.add('active');
   calcUpdate();
 }
 function calcUpdate() {
+  var fuelPrice = parseFloat(document.getElementById('fuelprice').value) || 500;
   var consumption = parseFloat(document.getElementById('consumption').value) || 30;
   var seadays = parseFloat(document.getElementById('seadays').value) || 220;
   var ets = document.getElementById('etsToggle').checked;
   var annualTonnes = consumption * seadays;
   var baseCost = annualTonnes * fuelPrice;
-  var etsCostPerTonne = ets ? 3.2 * 70 : 0;
+  var etsCostPerTonne = ets ? ETS_FACTORS[fuelType] * 70 : 0;
   var totalPerTonne = fuelPrice + etsCostPerTonne;
   var totalBase = annualTonnes * totalPerTonne;
   document.getElementById('calc-base').textContent =
