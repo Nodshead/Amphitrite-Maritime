@@ -587,7 +587,7 @@
             <button type="button" class="ob-tab" data-voy="direct">Direct</button>
             <button type="button" class="ob-tab active" data-voy="opt">Optimized</button>
           </div>
-          <div class="ob-stat"><span class="k">Distance</span><span class="v" id="voyDist">2824.9 nm</span></div>
+          <div class="ob-stat"><span class="k">Distance</span><span class="v" id="voyDist">2841.3 nm</span></div>
           <div class="ob-stat"><span class="k">Time</span><span class="v" id="voyTime">252 h</span></div>
           <div class="ob-stat"><span class="k">STW</span><span class="v" id="voySTW">10.7 kn</span></div>
           <div class="ob-stat"><span class="k">SOG</span><span class="v" id="voySOG">11.2 kn</span></div>
@@ -627,13 +627,14 @@
     <svg id="compareChart" viewBox="0 0 920 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Speed over ground comparison between direct and optimised route"></svg>
     <table class="compare-table">
       <tr><th>Metric</th><th><span class="dot-direct">●</span> Direct</th><th><span class="dot-opt">●</span> Optimised</th><th>Diff</th></tr>
-      <tr><td>Distance</td><td>2841.3 nm</td><td>2824.9 nm</td><td class="diff-good">-16.4 nm</td></tr>
+      <tr><td>Distance</td><td>2824.9 nm</td><td>2841.3 nm</td><td>+16.4 nm</td></tr>
       <tr><td>Duration</td><td>267.6 hrs</td><td>252.0 hrs</td><td class="diff-good">-15.5 h</td></tr>
       <tr><td>Avg Speed (SOG)</td><td>10.6 kn</td><td>11.2 kn</td><td class="diff-good">+0.6 kn</td></tr>
       <tr><td>Avg Speed (STW)</td><td>10.6 kn</td><td>10.7 kn</td><td>–</td></tr>
       <tr><td>Departure</td><td>08/07 12:02</td><td>08/07 12:02</td><td>–</td></tr>
       <tr><td>Arrival</td><td>19/07 15:36</td><td>19/07 00:04</td><td class="diff-good">15.5 h earlier</td></tr>
     </table>
+    <p style="font-size:12.5px; color:#3b5a80; margin-top:12px; line-height:1.6;"><b style="color:#14304f;">The route is 16.4 nm longer — and still arrives 15.5 hours earlier.</b> The detour rides favourable currents instead of fighting them: optimised across currents, waves, and wind together, the vessel gains 0.6 kn over ground at the same power.</p>
   </div>
 
   <div class="divider"></div>
@@ -1100,8 +1101,8 @@
 
     // voyage panel toggle
     var voy = {
-      direct: { dist: '2841.3 nm', time: '267.6 h', stw: '10.6 kn', sog: '10.6 kn' },
-      opt:    { dist: '2824.9 nm', time: '252 h',   stw: '10.7 kn', sog: '11.2 kn' }
+      direct: { dist: '2824.9 nm', time: '267.6 h', stw: '10.6 kn', sog: '10.6 kn' },
+      opt:    { dist: '2841.3 nm', time: '252 h',   stw: '10.7 kn', sog: '11.2 kn' }
     };
     document.querySelectorAll('.ob-tab').forEach(function (tab) {
       tab.addEventListener('click', function () {
